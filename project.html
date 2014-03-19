@@ -1,0 +1,114 @@
+<!--References:
+1: https://developer.mozilla.org/en-US/docs/Web/WebGL/Getting_started_with_WebGL
+2: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random?redirectlocale=en-US&redirectslug=JavaScript%2FReference%2FGlobal_Objects%2FMath%2Frandom
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CMSC 161 Project</title>
+        <script type="text/javascript" src="initUtils.js"></script>
+        <script type="text/javascript" src="gl-matrix.js"></script>
+        <style>
+            * { margin:0; padding:0; } /* to remove the top and left whitespace */
+            html, body { width:100%; height:100%; overflow: hidden} /* just to be sure these are full screen*/
+            canvas { display:block; width:100%; height:100%;} /* To remove the scrollbars */
+        </style>
+    </head>
+    <body>
+        <canvas id="c">
+        </canvas>
+
+        <script type="x-shader/x-vertex" id="vshader">
+            attribute vec3 aPosition;
+            attribute vec2 aTexCoords;
+
+            attribute vec3 aNormal;
+
+            uniform mat4 uModel;
+            uniform mat4 uView;
+            uniform mat4 uProjection;
+            uniform mat4 uNormal;
+
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            varying vec2 vTexCoords;
+
+            void main() {
+                gl_Position = uProjection * uView * uModel * vec4(aPosition,1.0);
+
+                vec3 vertexPosition = vec3(uModel * vec4(aPosition,1.0));
+                vec3 corrected_aNormal = vec3(uNormal * vec4(aNormal,1.0));
+
+                vPosition =  vertexPosition;
+                vNormal = corrected_aNormal;
+                vTexCoords = aTexCoords;
+
+            }
+        </script>
+        <script type="x-shader/x-fragment" id="fshader">
+            //#ifdef GL_ES
+            precision highp float;
+            //#endif
+            uniform sampler2D uSampler;
+
+            uniform vec3 uLightDirection;
+            uniform vec3 uEyePosition;
+
+            uniform vec3 uMaterialAmbient;
+            uniform vec3 uLightAmbient;
+
+            uniform vec3 uMaterialDiffuse;
+            uniform vec3 uLightDiffuse;
+
+            uniform vec3 uMaterialSpecular;
+            uniform vec3 uLightSpecular;
+            uniform float uShininess;
+
+            uniform bool uEnableAmbient;
+            uniform bool uEnableDiffuse;
+            uniform bool uEnableSpecular;
+
+            varying vec2 vTexCoords;
+            varying vec3 vNormal;
+            varying vec3 vPosition;
+            void main() {
+
+                vec3 ambientColor = vec3(0.0,0.0,0.0);
+                vec3 diffuseColor = vec3(0.0,0.0,0.0);
+                vec3 specularColor = vec3(0.0,0.0,0.0);
+
+                vec3 normalized_aNormal = normalize(vNormal);
+
+                vec3 normalized_uLightDirection = normalize(uLightDirection);
+                vec3 eyeDirection = uEyePosition - vPosition;
+                vec3 normalized_eyeDirection = normalize(eyeDirection);
+                vec3 reflectDirection = reflect(normalized_uLightDirection,normalized_aNormal);
+                vec3 normalized_reflectDirection = normalize(reflectDirection);
+                //ambient
+                if(uEnableAmbient) {
+                ambientColor = uLightAmbient * uMaterialAmbient;
+                }
+                //diffuse
+                if(uEnableDiffuse) {
+
+                float lambertCoefficient = max(dot(-normalized_uLightDirection,normalized_aNormal),0.0);
+                diffuseColor =  uLightDiffuse * uMaterialDiffuse * lambertCoefficient;
+                }
+                //specular
+                if(uEnableSpecular) {
+
+                float specularCoefficient = max(dot(normalized_reflectDirection,normalized_eyeDirection),0.0);
+                specularCoefficient = pow(specularCoefficient,uShininess);
+                specularColor =  uLightSpecular * uMaterialSpecular * specularCoefficient;
+                //specularColor = vec3(1.0,1.0,1.0) * specularCoefficient;
+                }
+
+                vec4 texColor = texture2D(uSampler, vTexCoords);
+                vec4 finalColor = vec4(texColor.rgb + ambientColor+diffuseColor+specularColor,texColor.a);
+                gl_FragColor = finalColor;
+            }
+        </script>
+        <script src="renderer.js">
+        </script>
+    </body>
+</html>
