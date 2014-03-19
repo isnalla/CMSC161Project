@@ -78,11 +78,11 @@ function handleTextureLoaded(image, texture, index){
 
 document.body.onload = main;
 
-var dy = 1;
-var wallBox,heartBox,greenBox;
+var wallBox,floorBox,heartBox,greenBox;
 var grid;
 function main(){
-    wallBox = new Box(1.0,1.0,1.0,Materials.CEMENT);
+    wallBox = new Box(30.0,0.2,5.0,Materials.CEMENT);
+    floorBox = new Box(30.0,30.0,0.1,Materials.HEART);
     heartBox = new Box(1.0,1.0,1.0,Materials.HEART);
     greenBox = new Box(1.0,1.0,1.0,Materials.GREEN);
     grid = new Grid();
@@ -106,11 +106,7 @@ function animate(){
 
     setLighting();
     setCamera();
-
-
-
     drawScene();
-
 
     requestAnimFrame(animate);
 }
@@ -122,9 +118,9 @@ function setLighting(){
     var enableSpecular = true;
     //light direction
     var ld = {
-        x: -1.0,
-        y: -2.5,
-        z: -5.0
+        x: 30.0,
+        y: 30.0,
+        z: 30.0
     };
     //light specular color
     var ls = {
@@ -140,9 +136,9 @@ function setLighting(){
     };
     //ambient light color
     var amb = {
-        r: 0.2,
-        g: 0.2,
-        b: 0.2
+        r: 0.5,
+        g: 0.5,
+        b: 0.5
     };
     gl.uniform1i(uEnableAmbient,enableAmbient);
     gl.uniform1i(uEnableDiffuse,enableDiffuse);
@@ -156,7 +152,7 @@ function setLighting(){
 
 /* --- Camera Settings --- */
 function setCamera(){
-    var eye = [0,20,20];      //Point where the eye is
+    var eye = [0,125,125];      //Point where the eye is
     var center = [0,0,0];   //Point where the eye will look at
     var up = [0,1,0];       //Camera up vector
     mat4.lookAt(viewMatrix,eye,center,up);
@@ -165,7 +161,7 @@ function setCamera(){
     var perspectiveDegrees = 30;
     var aspect = canvas.width/canvas.height;
     var near = 1;
-    var far = 100;
+    var far = 250;
     mat4.perspective(projectionMatrix,glMatrix.toRadian(perspectiveDegrees),aspect,near,far);
     gl.uniformMatrix4fv(uProjection,false,projectionMatrix);
 
@@ -179,21 +175,33 @@ function setCamera(){
 /* ----------------------- */
 
 function drawScene(){
-    drawObject(wallBox,[0,0,0]); //object, position(x,y,z)
-    drawObject(heartBox,[-5,0,0])
+    drawObject(wallBox,[0,0,30]); //object, position(x,y,z), rotationX, rotationY
+    drawObject(wallBox,[-30,0,0],0,90);
+    drawObject(wallBox,[30,0,0],0,90);
+    drawObject(wallBox,[0,0,-30],0,0);
+    drawObject(floorBox,[0,0,0],0,0);
+
+    drawObject(heartBox,[-5,0,0]);
+    drawObject(greenBox,[5,0,0]);
+
 }
 
 /*** Binds the object to draw to the webGL Array Buffer ***/
-function drawObject(model,position){
+function drawObject(model,position,rotationX,rotationY){
     if(imagesArray['wall'].ready){
         setMaterial(model.material);  //set Material to be used for rendering (The material is not the object being rendered)
 
         //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
         //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(180+i));
         //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(i));
-        var modelMatrix = mat4.create();
+        var modelMatrix = mat4.create();//reset model matrix
         mat4.translate(modelMatrix,modelMatrix,position);
-        mat4.rotateY(modelMatrix,modelMatrix, glMatrix.toRadian(dy));
+        if(rotationX != null){
+            mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(rotationX));
+        }
+        if(rotationY != null){
+            mat4.rotateY(modelMatrix,modelMatrix, glMatrix.toRadian(rotationY));
+        }
         gl.uniformMatrix4fv(uModel,false,modelMatrix);
 
         var normalMatrix = mat4.create();
@@ -382,11 +390,6 @@ function Grid(){
         0.0,0.0,0.0
 
     ];
-    this.color = {
-        r: 1.0,
-        g: 1.0,
-        b: 1.0
-    };
 
     this.initBuffers();
 }
