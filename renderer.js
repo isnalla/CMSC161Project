@@ -80,11 +80,12 @@ document.body.onload = main;
 
 var dy = 1;
 var wallBox,heartBox,greenBox;
-
+var grid;
 function main(){
     wallBox = new Box(1.0,1.0,1.0,Materials.CEMENT);
     heartBox = new Box(1.0,1.0,1.0,Materials.HEART);
     greenBox = new Box(1.0,1.0,1.0,Materials.GREEN);
+    grid = new Grid();
 
     animate();
 }
@@ -105,7 +106,11 @@ function animate(){
 
     setLighting();
     setCamera();
+
+
+
     drawScene();
+
 
     requestAnimFrame(animate);
 }
@@ -151,7 +156,7 @@ function setLighting(){
 
 /* --- Camera Settings --- */
 function setCamera(){
-    var eye = [40,30,30];      //Point where the eye is
+    var eye = [0,20,20];      //Point where the eye is
     var center = [0,0,0];   //Point where the eye will look at
     var up = [0,1,0];       //Camera up vector
     mat4.lookAt(viewMatrix,eye,center,up);
@@ -356,7 +361,7 @@ Box.prototype.initBuffers = function(){
 
     gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(aTexCoords);
-}
+};
 Box.prototype.indices = [
     0,  1,  2,      0,  2,  3,    // front
     4,  5,  6,      4,  6,  7,    // back
@@ -370,7 +375,29 @@ Box.prototype.indices = [
  *              Box Class Definition
  *
  * ******************END************************/
+function Grid(){
+    this.vertices = [
+        0.0,5.0,0.0,
+        0.0,-5.0,0,0,
+        0.0,0.0,0.0
 
+    ];
+    this.color = {
+        r: 1.0,
+        g: 1.0,
+        b: 1.0
+    };
+
+    this.initBuffers();
+}
+Grid.prototype.initBuffers = function(){
+    this.verticesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,this.verticesBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(this.vertices),gl.STATIC_DRAW);
+    gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,0,0);
+    gl.enableVertexAttribArray(aPosition);
+
+};
  /********************START************************
  *
  *              Material CONSTANTS
