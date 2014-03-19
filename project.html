@@ -104,7 +104,7 @@
                 }
 
                 vec4 texColor = texture2D(uSampler, vTexCoords);
-                vec4 finalColor = vec4(texColor.rgb + ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                vec4 finalColor = vec4(texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
                 gl_FragColor = finalColor;
             }
         </script>

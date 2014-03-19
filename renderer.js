@@ -45,7 +45,8 @@ var projectionMatrix = mat4.create();
 var IMAGE_SOURCES_ARRAY = [
     {name:'wall',src:'textures/moon.png'},
     {name:'heart',src:'textures/heart512.png'},
-    {name:'green',src:'textures/green.png'}
+    {name:'green',src:'textures/green.png'},
+    {name:'bricks',src:'textures/bricks.png'}
 ];
 var imagesArray = [];
 //Load all textures to imagesAray
@@ -81,8 +82,9 @@ document.body.onload = main;
 var wallBox,floorBox,heartBox,greenBox;
 var grid;
 function main(){
-    wallBox = new Box(30.0,0.2,5.0,Materials.CEMENT);
-    floorBox = new Box(30.0,30.0,0.1,Materials.HEART);
+                  //Box(l,w,h,material)  material = material properties and texture
+    wallBox = new Box(30.0,0.2,5.0,Materials.BRICKS);
+    floorBox = new Box(30.0,30.0,0.1,Materials.CEMENT);
     heartBox = new Box(1.0,1.0,1.0,Materials.HEART);
     greenBox = new Box(1.0,1.0,1.0,Materials.GREEN);
     grid = new Grid();
@@ -97,7 +99,6 @@ function main(){
  *
  *  Accepts values 0.0 - 1.0 (1.0 = from -1.0 to 1.0)
  */
-
 function animate(){
     gl.clearColor(0, 0, 0, 1);
     gl.enable(gl.DEPTH_TEST);
@@ -118,9 +119,9 @@ function setLighting(){
     var enableSpecular = true;
     //light direction
     var ld = {
-        x: 30.0,
-        y: 30.0,
-        z: 30.0
+        x: 100.0,
+        y: 100.0,
+        z: 100.0
     };
     //light specular color
     var ls = {
@@ -152,7 +153,7 @@ function setLighting(){
 
 /* --- Camera Settings --- */
 function setCamera(){
-    var eye = [0,125,125];      //Point where the eye is
+    var eye = [60,85,85];      //Point where the eye is
     var center = [0,0,0];   //Point where the eye will look at
     var up = [0,1,0];       //Camera up vector
     mat4.lookAt(viewMatrix,eye,center,up);
@@ -175,17 +176,17 @@ function setCamera(){
 /* ----------------------- */
 
 function drawScene(){
-    drawObject(wallBox,[0,0,30]); //object, position(x,y,z), rotationX, rotationY
+    drawObject(wallBox,[0,0,30],0,0); //object, position(x,y,z), rotationX, rotationY
     drawObject(wallBox,[-30,0,0],0,90);
     drawObject(wallBox,[30,0,0],0,90);
     drawObject(wallBox,[0,0,-30],0,0);
-    drawObject(floorBox,[0,0,0],0,0);
+    drawObject(floorBox,[0,-1,0],0,0);
 
     drawObject(heartBox,[-5,0,0]);
     drawObject(greenBox,[5,0,0]);
 
 }
-
+var i = 0;
 /*** Binds the object to draw to the webGL Array Buffer ***/
 function drawObject(model,position,rotationX,rotationY){
     if(imagesArray['wall'].ready){
@@ -413,7 +414,15 @@ Materials.CEMENT = function (){
      gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
      gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
      gl.uniform1f(uShininess,1.0);
- };
+ }
+//Brass - texture yet just material properties
+Materials.BRASS = function (){  //taken from slidess
+    gl.uniform1i(uSampler, 0);  //change this
+    gl.uniform3f(uMaterialDiffuse,0.78, 0.57, 0.11);
+    gl.uniform3f(uMaterialSpecular,0.99, 0.91, 0.81); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.33,0.22,0.03); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,27.8);
+};
 Materials.HEART = function (){
     gl.uniform1i(uSampler, 1);
     gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
@@ -428,3 +437,11 @@ Materials.GREEN = function (){
     gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
     gl.uniform1f(uShininess,1.0);
 };
+
+Materials.BRICKS = function (){
+    gl.uniform1i(uSampler, 3);
+    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
+    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,1.0);
+}
