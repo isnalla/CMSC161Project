@@ -42,14 +42,26 @@ var viewMatrix = mat4.create();
 var projectionMatrix = mat4.create();
 
     /********** Initialize Texture Images ******************/
+
+//Load all textures to imagesAray
+//Handle texture on image load
+function handleTextureLoaded(image, texture, index){
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+    gl.activeTexture(gl.TEXTURE0 + index);  //Assigns texture from TEXTURE0 to TEXURE(n-1)  ; n = number of textures
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB  , gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.generateMipmap(gl.TEXTURE_2D);
+}
 var IMAGE_SOURCES_ARRAY = [
     {name:'wall',src:'textures/moon.png'},
     {name:'heart',src:'textures/heart512.png'},
     {name:'green',src:'textures/green.png'},
-    {name:'bricks',src:'textures/bricks.png'}
+    {name:'bricks',src:'textures/bricks.png'},
+    {name:'sun',src:'textures/sun.png'}
 ];
 var imagesArray = [];
-//Load all textures to imagesAray
 for(var ii = 0; ii < IMAGE_SOURCES_ARRAY.length; ii++){
     var image = new Image();
     image.ready = false;
@@ -61,32 +73,23 @@ for(var ii = 0; ii < IMAGE_SOURCES_ARRAY.length; ii++){
     image.src = IMAGE_SOURCES_ARRAY[ii].src;
     imagesArray[IMAGE_SOURCES_ARRAY[ii].name] = image;
 }
-//Handle texture on image load
-function handleTextureLoaded(image, texture, index){
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-    gl.activeTexture(gl.TEXTURE0 + index);  //Assigns texture from TEXTURE0 to TEXURE(n-1)  ; n = number of textures
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB  , gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.generateMipmap(gl.TEXTURE_2D);
-}
 /*********************END**************************
  *
  *         Initialize WEBGL Variables
  *
  * *******************END*************************/
-
 document.body.onload = main;
-
 var wallBox,floorBox,heartBox,greenBox;
 var grid;
 function main(){
                   //Box(l,w,h,material)  material = material properties and texture
     wallBox = new Box(30.0,0.2,5.0,Materials.BRICKS);
     floorBox = new Box(30.0,30.0,0.1,Materials.CEMENT);
+
     heartBox = new Box(1.0,1.0,1.0,Materials.HEART);
     greenBox = new Box(1.0,1.0,1.0,Materials.GREEN);
+    sunBox = new Box(5.0,5.0,5.0,Materials.FIRE);
+
     grid = new Grid();
 
     animate();
@@ -119,9 +122,9 @@ function setLighting(){
     var enableSpecular = true;
     //light direction
     var ld = {
-        x: 100.0,
-        y: 100.0,
-        z: 100.0
+        x: 1.0,
+        y: 1.0,
+        z: 1.0
     };
     //light specular color
     var ls = {
@@ -150,26 +153,85 @@ function setLighting(){
     gl.uniform3f(uLightAmbient,amb.r,amb.g,amb.b); //NATURAL LIGHT COLOR
 }
 /* ------------------------- */
+//temporarily global
+//experimental camera system
+var eye = {
+    x:0,
+    y:25,
+    z:100
+};
+var mouse = {
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0
+};
+var center = {
+    x: 0,
+    y: 0,
+    z: 0,
+    theta: 90, //in degrees
+    phi: 90
+};
 
+var mouseSensitivity = 3;
+
+canvas.onmouseenter = function(event){
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+};
+
+canvas.onclick = function(event){
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+};
+canvas.onmousemove = function(event){
+    var screenCenter = {
+        x: screen.width/2,
+        y: screen.height/2
+    };
+
+    mouse.dx = (event.clientX - screenCenter.x)*mouseSensitivity/1000;
+    mouse.dy = (screenCenter.y - event.clientY)*mouseSensitivity/1000;
+};
+var count = 0;
 /* --- Camera Settings --- */
-function setCamera(){
-    var eye = [60,85,85];      //Point where the eye is
-    var center = [0,0,0];   //Point where the eye will look at
+function cosDegree(degree){
+    return Math.cos(glMatrix.toRadian(degree));
+}
+function sinDegree(degree){
+    return Math.sin(glMatrix.toRadian(degree));
+
+}
+function setCamera(){    //Point where the eye is
     var up = [0,1,0];       //Camera up vector
-    mat4.lookAt(viewMatrix,eye,center,up);
+
+    center.theta = center.theta + mouse.dx;
+    center.phi = center.phi + mouse.dy;
+    console.log(center.z);
+    if(center.theta > 360 || center.theta < -360) center.theta = 0;
+    if(center.phi < 60) center.phi = 60;
+    if(center.phi > 120) center.phi = 120;
+    center.y = eye.y - 100*cosDegree( center.phi );
+    center.x = eye.x - 100*cosDegree(center.theta);
+    center.z = eye.z - 100*sinDegree(center.theta);
+    if(count++ < 1)
+        console.log(count,center);
+    mat4.lookAt(viewMatrix,[eye.x,eye.y,eye.z],[center.x,center.y,center.z],up);
     gl.uniformMatrix4fv(uView,false,viewMatrix);
 
     var perspectiveDegrees = 30;
     var aspect = canvas.width/canvas.height;
     var near = 1;
-    var far = 250;
+    var far = 500;
     mat4.perspective(projectionMatrix,glMatrix.toRadian(perspectiveDegrees),aspect,near,far);
     gl.uniformMatrix4fv(uProjection,false,projectionMatrix);
 
+    //?????
     var eyepos = {
-        x: 5,
-        y: 5,
-        z: 9
+        x: 0,
+        y: 0,
+        z: 0
     };
     gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
 }
@@ -184,6 +246,8 @@ function drawScene(){
 
     drawObject(heartBox,[-5,0,0]);
     drawObject(greenBox,[5,0,0]);
+
+    drawObject(sunBox,[85,85,85]);  //for tracking viewMatrix eye position
 
 }
 var i = 0;
@@ -216,10 +280,9 @@ function drawObject(model,position,rotationX,rotationY){
         gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
         gl.vertexAttribPointer(aNormal,3,gl.FLOAT,false,0,0);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
-
         gl.bindBuffer(gl.ARRAY_BUFFER, model.texCoordsBuffer);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
+
         //Draw Scene
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
         gl.drawElements(gl.TRIANGLES, model.indices.length, gl.UNSIGNED_BYTE, 0);
@@ -312,7 +375,7 @@ function Box(l,w,h,material){
         -l,  h,  w,
         -l,  h, -w
     ];
-    this.texCoords = [   // Coordinates
+    this.texCoords = [
         // Front
         0.0,  0.0,
         l,    0.0,
@@ -367,7 +430,6 @@ Box.prototype.initBuffers = function(){
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
-
     gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(aTexCoords);
 };
@@ -414,13 +476,20 @@ Materials.CEMENT = function (){
      gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
      gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
      gl.uniform1f(uShininess,1.0);
- }
+ };
 //Brass - texture yet just material properties
 Materials.BRASS = function (){  //taken from slidess
     gl.uniform1i(uSampler, 0);  //change this
     gl.uniform3f(uMaterialDiffuse,0.78, 0.57, 0.11);
     gl.uniform3f(uMaterialSpecular,0.99, 0.91, 0.81); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
     gl.uniform3f(uMaterialAmbient,0.33,0.22,0.03); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,27.8);
+};
+Materials.FIRE = function (){  //taken from slides - equal to BRASS LOL
+    gl.uniform1i(uSampler, 4);  //change this
+    gl.uniform3f(uMaterialDiffuse,0.78, 0.57, 0.11);
+    gl.uniform3f(uMaterialSpecular,0.99, 0.91, 0.81); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,1.0,1.0,1.0); //COLOR REFLECTED FROM AMBIENT LIGHT
     gl.uniform1f(uShininess,27.8);
 };
 Materials.HEART = function (){
@@ -444,4 +513,4 @@ Materials.BRICKS = function (){
     gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
     gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
     gl.uniform1f(uShininess,1.0);
-}
+};
