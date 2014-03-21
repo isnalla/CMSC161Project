@@ -43,10 +43,11 @@ var projectionMatrix = mat4.create();
 
     /********** Initialize Texture Images ******************/
 var IMAGE_SOURCES_ARRAY = [
-    {name:'wall',src:'textures/moon.png'},
-    {name:'heart',src:'textures/heart512.png'},
-    {name:'green',src:'textures/green.png'},
-    {name:'bricks',src:'textures/bricks.png'}
+    {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
+    {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
+    {name:'red-stone-tile',src:'textures/red-stone-tile.png'},
+    {name:'vinyl-tile',src:'textures/vinyl-tile.png'},
+    {name:'door',src:'textures/door.png'}
 ];
 var imagesArray = [];
 //Load all textures to imagesAray
@@ -83,11 +84,10 @@ var wallBox,floorBox,heartBox,greenBox;
 var grid;
 function main(){
                   //Box(l,w,h,material)  material = material properties and texture
-    wallBox = new Box(30.0,0.2,5.0,Materials.BRICKS);
-    floorBox = new Box(30.0,30.0,0.1,Materials.CEMENT);
-    heartBox = new Box(1.0,1.0,1.0,Materials.HEART);
-    greenBox = new Box(1.0,1.0,1.0,Materials.GREEN);
-    grid = new Grid();
+    wallBox = new Box(30.0,1.0,5.0,Materials.SILVER_MARBLE);
+    floorBox = new Box(30.0,30.0,0.1,Materials.SEAMLESS_MARBLE);
+    heartBox = new Box(1.0,1.0,1.0,Materials.RED_STONE);
+    greenBox = new Box(1.0,1.0,1.0,Materials.VINYL);
 
     animate();
 }
@@ -119,9 +119,9 @@ function setLighting(){
     var enableSpecular = true;
     //light direction
     var ld = {
-        x: 100.0,
-        y: 100.0,
-        z: 100.0
+        x: -1.0,
+        y: -1.0,
+        z: -1.0
     };
     //light specular color
     var ls = {
@@ -137,9 +137,9 @@ function setLighting(){
     };
     //ambient light color
     var amb = {
-        r: 0.5,
-        g: 0.5,
-        b: 0.5
+        r: 1.0,
+        g: 1.0,
+        b: 1.0
     };
     gl.uniform1i(uEnableAmbient,enableAmbient);
     gl.uniform1i(uEnableDiffuse,enableDiffuse);
@@ -150,11 +150,19 @@ function setLighting(){
     gl.uniform3f(uLightAmbient,amb.r,amb.g,amb.b); //NATURAL LIGHT COLOR
 }
 /* ------------------------- */
-
+function Camera(cameraSettings){
+    this.eye = cameraSettings.eye;
+    this.center = cameraSettings.center;
+    this.up = cameraSettings.up;
+}
 /* --- Camera Settings --- */
 function setCamera(){
-    var eye = [60,85,85];      //Point where the eye is
-    var center = [0,0,0];   //Point where the eye will look at
+    //10,10,10
+    //eye = point where the eye is
+    var eye = [85,85,85];      //worms eye view4
+//        var eye = [85,85,-85] //eagles eye view
+
+    var center = [0,5,0];   //Point where the eye will look at
     var up = [0,1,0];       //Camera up vector
     mat4.lookAt(viewMatrix,eye,center,up);
     gl.uniformMatrix4fv(uView,false,viewMatrix);
@@ -189,7 +197,7 @@ function drawScene(){
 var i = 0;
 /*** Binds the object to draw to the webGL Array Buffer ***/
 function drawObject(model,position,rotationX,rotationY){
-    if(imagesArray['wall'].ready){
+    if(imagesArray['door'].ready){
         setMaterial(model.material);  //set Material to be used for rendering (The material is not the object being rendered)
 
         //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
@@ -219,7 +227,8 @@ function drawObject(model,position,rotationX,rotationY){
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, model.texCoordsBuffer);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
+
         //Draw Scene
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
         gl.drawElements(gl.TRIANGLES, model.indices.length, gl.UNSIGNED_BYTE, 0);
@@ -232,96 +241,43 @@ function setMaterial(material){
     material();
 }
 
-/********************START*************************
- *
- *              Box Class Definition
- *
- * ******************START************************/
-function Box(l,w,h,material){
+/*
+ *  @param d depth
+ *  @param w horizontal width
+ *  @param l length vertical
+ */
+function Box(w,l,d,material){
     this.vertices = [   // Coordinates
         // Front face
-        -l, -h,  w,
-        l, -h,  w,
-        l,  h,  w,
-        -l,  h,  w,
-
-        // Back face
-        -l, -h, -w,
-        -l,  h, -w,
-        l,  h, -w,
-        l, -h, -w,
-
-        // Top face
-        -l,  h, -w,
-        -l,  h,  w,
-        l,  h,  w,
-        l,  h, -w,
-
-        // Bottom face
-        -l, -h, -w,
-        l, -h, -w,
-        l, -h,  w,
-        -l, -h,  w,
-
-        // Right face
-        l, -h, -w,
-        l,  h, -w,
-        l,  h,  w,
-        l, -h,  w,
-
-        // Left face
-        -l, -h, -w,
-        -l, -h,  w,
-        -l,  h,  w,
-        -l,  h, -w
+        w, d, l,		//top-right-front vertex
+        -w, d, l,		//top-left-front vertex
+        -w,-d, l,		//bottom-left-front vertex
+        w,-d, l,		//bottom-right-front vertex
+        w, d,-l,		//top-right-back vertex
+        -w, d,-l,		//top-left-back vertex
+        -w,-d,-l,		//bottom-left-back vertex
+        w,-d,-l		//bottom-right-back vertex
     ];
     this.normals = [   // Coordinates
-        // Front face
-        -l, -h,  w,
-        l, -h,  w,
-        l,  h,  w,
-        -l,  h,  w,
-
-        // Back face
-        -l, -h, -w,
-        -l,  h, -w,
-        l,  h, -w,
-        l, -h, -w,
-
-        // Top face
-        -l,  h, -w,
-        -l,  h,  w,
-        l,  h,  w,
-        l,  h, -w,
-
-        // Bottom face
-        -l, -h, -w,
-        l, -h, -w,
-        l, -h,  w,
-        -l, -h,  w,
-
-        // Right face
-        l, -h, -w,
-        l,  h, -w,
-        l,  h,  w,
-        l, -h,  w,
-
-        // Left face
-        -l, -h, -w,
-        -l, -h,  w,
-        -l,  h,  w,
-        -l,  h, -w
+        w, d, l,		//top-right-front vertex
+        -w, d, l,		//top-left-front vertex
+        -w,-d, l,		//bottom-left-front vertex
+        w,-d, l,		//bottom-right-front vertex
+        w, d,-l,		//top-right-back vertex
+        -w, d,-l,		//top-left-back vertex
+        -w,-d,-l,		//bottom-left-back vertex
+        w,-w,-l		//bottom-right-back vertex
     ];
     this.texCoords = [   // Coordinates
         // Front
         0.0,  0.0,
         l,    0.0,
-        l,    h,
-        0.0,  h,
+        l,    d,
+        0.0,  d,
         // Back
         l,    0.0,
-        l,    h,
-        0.0,  h,
+        l,    d,
+        0.0,  d,
         0.0,  0.0,
 
         // Top
@@ -329,21 +285,21 @@ function Box(l,w,h,material){
         0.0,  0.0,
         l,    0.0,
         l,    w,
-        // Bottom
+      // Bottom
         0.0,  0.0,
         l,    0.0,
         l,    w,
         0.0,  w,
-        // Right
+  // Right
         w,    0.0,
-        w,    h,
-        0.0,  h,
+        w,    d,
+        0.0,  d,
         0.0,  0.0,
         // Left
         0.0,  0.0,
         w,    0.0,
-        w,    h,
-        0.0,  h
+        w,    d,
+        0.0,  d
     ];
     this.material = material;
     this.initBuffers();
@@ -367,54 +323,68 @@ Box.prototype.initBuffers = function(){
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
-
     gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
     gl.enableVertexAttribArray(aTexCoords);
 };
 Box.prototype.indices = [
-    0,  1,  2,      0,  2,  3,    // front
-    4,  5,  6,      4,  6,  7,    // back
-    8,  9,  10,     8,  10, 11,   // top
-    12, 13, 14,     12, 14, 15,   // bottom
-    16, 17, 18,     16, 18, 19,   // right
-    20, 21, 22,     20, 22, 23    // left
+    0, 1, 2,   0, 2, 3,    // front
+    4, 5, 6,	4, 6, 7,	// back
+    4, 5, 0,   5, 1, 0,	// top
+    7, 6, 3,	6, 2, 3,	// bottom
+    4, 0, 7,	0, 3, 7,	// right
+    5, 1, 6,	1, 2, 6		// left
 ];
 /********************END*************************
  *
  *              Box Class Definition
  *
  * ******************END************************/
-function Grid(){
-    this.vertices = [
-        0.0,5.0,0.0,
-        0.0,-5.0,0,0,
-        0.0,0.0,0.0
-
-    ];
-
-    this.initBuffers();
-}
-Grid.prototype.initBuffers = function(){
-    this.verticesBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,this.verticesBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(this.vertices),gl.STATIC_DRAW);
-    gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,0,0);
-    gl.enableVertexAttribArray(aPosition);
-
-};
  /********************START************************
  *
  *              Material CONSTANTS
  *
  * ******************START************************/
 var Materials = {};
-Materials.CEMENT = function (){
+Materials.SILVER_MARBLE = function (){
      gl.uniform1i(uSampler, 0);
      gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
      gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
      gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
      gl.uniform1f(uShininess,1.0);
  }
+
+Materials.SEAMLESS_MARBLE = function (){
+    gl.uniform1i(uSampler, 1);
+    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
+    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,1.0);
+};
+
+
+Materials.VINYL = function (){
+    gl.uniform1i(uSampler, 2);
+    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
+    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,1.0);
+}
+
+Materials.DOOR = function (){
+    gl.uniform1i(uSampler, 3);
+    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
+    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,1.0);
+}
+
+Materials.RED_STONE = function (){
+    gl.uniform1i(uSampler, 4);
+    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
+    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
+    gl.uniform1f(uShininess,1.0);
+};
 //Brass - texture yet just material properties
 Materials.BRASS = function (){  //taken from slidess
     gl.uniform1i(uSampler, 0);  //change this
@@ -423,25 +393,3 @@ Materials.BRASS = function (){  //taken from slidess
     gl.uniform3f(uMaterialAmbient,0.33,0.22,0.03); //COLOR REFLECTED FROM AMBIENT LIGHT
     gl.uniform1f(uShininess,27.8);
 };
-Materials.HEART = function (){
-    gl.uniform1i(uSampler, 1);
-    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
-    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
-    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
-    gl.uniform1f(uShininess,1.0);
-};
-Materials.GREEN = function (){
-    gl.uniform1i(uSampler, 2);
-    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
-    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
-    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
-    gl.uniform1f(uShininess,1.0);
-};
-
-Materials.BRICKS = function (){
-    gl.uniform1i(uSampler, 3);
-    gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
-    gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
-    gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
-    gl.uniform1f(uShininess,1.0);
-}
