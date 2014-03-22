@@ -29,8 +29,8 @@ function main(){
     initializeWebGLVariables(); //initialize variables declared above
 
     //Box(w,l,d,material)  material = material properties and texture
-    var lwallBox = new Box(30.75,3.0,0.25,Materials.SILVER_MARBLE);
-    var swallBox = new Box(28,3.0,0.25,Materials.SILVER_MARBLE);
+    var lwallBox = new Box(30.75,1.5,0.25,Materials.SILVER_MARBLE);
+    var swallBox = new Box(28,1.5,0.25,Materials.SILVER_MARBLE);
     var _vcorridor = new Box(20,2.25,0.0001,Materials.SILVER_MARBLE);
     var _hcorridor = new Box(2.625,30.5,0.0001,Materials.SILVER_MARBLE);
     var _2x10floor = new Box(2,10,0.0001,Materials.SILVER_MARBLE);
@@ -43,59 +43,60 @@ function main(){
     var _wcrfloor = new Box(3,6,0.002,Materials.WOMEN);
     var _mcrfloor = new Box(3,6,0.002,Materials.MEN);
 
-    var _1mBox = new Box(0.75,3.0,0.25,Materials.VINYL);
-    var _2mBox = new Box(1.75,3.0,0.25,Materials.VINYL);
-    var _3mBox = new Box(2.75,3.0,0.25,Materials.VINYL);
-    var _4m2Box = new Box(4.25,3.0,0.25,Materials.VINYL);
+    var _1mBox = new Box(0.75,1.5,0.25,Materials.VINYL);
+    var _2mBox = new Box(1.75,1.5,0.25,Materials.VINYL);
+    var _3mBox = new Box(2.75,1.5,0.25,Materials.VINYL);
+    var _4m2Box = new Box(4.25,1.5,0.25,Materials.VINYL);
 
-    var _4mBox = new Box(3.75,3.0,0.25,Materials.VINYL);
-    var _5mBox = new Box(4.75,3.0,0.25,Materials.VINYL);
-    var _6mBox = new Box(6.25,3.0,0.25,Materials.VINYL);
-    var _8mBox = new Box(8.25,3.0,0.25,Materials.VINYL);
-    var _9mBox = new Box(9.25,3.0,0.25,Materials.VINYL);
-    var _10mBox = new Box(10.0,3.0,0.25,Materials.VINYL);
-    var _13mBox = new Box(13.0,3.0,0.25,Materials.VINYL);
-    var _17mBox = new Box(16.75,3.0,0.25,Materials.VINYL);
-    var _20mBox = new Box(19.75,3.0,0.25,Materials.VINYL);
+    var _4mBox = new Box(3.75,1.5,0.25,Materials.VINYL);
+    var _5mBox = new Box(4.75,1.5,0.25,Materials.VINYL);
+    var _6mBox = new Box(6.25,1.5,0.25,Materials.VINYL);
+    var _8mBox = new Box(8.25,1.5,0.25,Materials.VINYL);
+    var _9mBox = new Box(9.25,1.5,0.25,Materials.VINYL);
+    var _10mBox = new Box(10.0,1.5,0.25,Materials.VINYL);
+    var _13mBox = new Box(13.0,1.5,0.25,Materials.VINYL);
+    var _17mBox = new Box(16.75,1.5,0.25,Materials.VINYL);
+    var _20mBox = new Box(19.75,1.5,0.25,Materials.VINYL);
 
 
     animate();
 
     function animate(){
         gl.clearColor(0, 0, 0, 1);
-        gl.enable(gl.DEPTH_TEST);
         gl.viewport(0,0,canvas.width,canvas.height);
+        gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         setLighting();
         setCamera();
+
         drawScene();
 
         requestAnimFrame(animate);
     }
     function drawScene(){
-//drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
+//        drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
         //floors
-        drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
-        drawObject(_vcorridor,[1,0,-6],90,0);
-        drawObject(_vcorridor,[1,0,-28],90,0);
-        drawObject(_vcorridor,[1,0,28.5],90,0);
-        drawObject(_hcorridor,[23.625,0,0],90,0);   //horizontal corridors
-        drawObject(_5x9floor,[-4.25,0,17],90,0);    //5x9 floors
-        drawObject(_5x9floor,[5.75,0,17],90,0);
-        drawObject(_5x9floor,[15.75,0,17],90,0);
-        drawObject(_5x9floor,[5.75,0,-17],90,0);
-        drawObject(_5x9floor,[-4.25,0,-17],90,0);
-        drawObject(_5x9floor,[-14.25,0,-17],90,0);
-        drawObject(_5x6floor,[15.75,0,-20],90,0);   //board room floor
-        drawObject(_lkfloor,[-14.25,0,17],90,0);    //lounge & kitchen floor
-        drawObject(_5x5floor,[16,0,-9],90,0);       //patio
-        drawObject(_wcrfloor,[-22,0,22],90,0);      //women's cr floor
-        drawObject(_mcrfloor,[-22,0,-22],90,0);     //men's cr floor
-        drawObject(_2x10floor,[-25,0,-20.25],90,0); //floors around front stairs
-        drawObject(_2x12floor,[-25,0,18.375],90,0);
-        drawObject(_2x30floor,[-21.125,0,0],90,0);
-        drawObject(_2x30floor,[-28.875,0,0],90,0);
+        drawObject(_vcorridor,[1,-2.0,6],90,0);    //vertical corridors
+        drawObject(_vcorridor,[1,-2.0,-6],90,0);
+        drawObject(_vcorridor,[1,-2.0,-28],90,0);
+        drawObject(_vcorridor,[1,-2.0,28.5],90,0);
+        drawObject(_hcorridor,[23.625,-2.0,0],90,0);   //horizontal corridors
+        drawObject(_5x9floor,[-4.25,-2.0,17],90,0);    //5x9 floors
+        drawObject(_5x9floor,[5.75,-2.0,17],90,0);
+        drawObject(_5x9floor,[15.75,-2.0,17],90,0);
+        drawObject(_5x9floor,[5.75,-2.0,-17],90,0);
+        drawObject(_5x9floor,[-4.25,-2.0,-17],90,0);
+        drawObject(_5x9floor,[-14.25,-2.0,-17],90,0);
+        drawObject(_5x6floor,[15.75,-2.0,-20],90,0);   //board room floor
+        drawObject(_lkfloor,[-14.25,-2.0,17],90,0);    //lounge & kitchen floor
+        drawObject(_5x5floor,[16,-2.0,-9],90,0);       //patio
+        drawObject(_wcrfloor,[-22,-2.0,22],90,0);      //women's cr floor
+        drawObject(_mcrfloor,[-22,-2.0,-22],90,0);     //men's cr floor
+        drawObject(_2x10floor,[-25,-2.0,-20.25],90,0); //floors around front stairs
+        drawObject(_2x12floor,[-25,-2.0,18.375],90,0);
+        drawObject(_2x30floor,[-21.125,-2.0,0],90,0);
+        drawObject(_2x30floor,[-28.875,-2.0,0],90,0);
         //outer walls
         drawObject(swallBox,[-2.25,0,30.5],0,0);
         drawObject(lwallBox,[-30.5,0,0],0,90);
@@ -168,7 +169,7 @@ function main(){
         var ld = {x: -1.0,y: -1.0,z: -1.0};     //light direction
         var ls = {r: 1.0,g: 1.0,b: 1.0};        //light specular color
         var ldf = {r: 1.0, g: 1.0, b: 1.0};        //light diffuse
-        var amb = { r: 1.0, g: 1.0, b: 1.0};        //ambient light color
+        var amb = { r: 0.5, g: 0.5, b: 0.5};        //ambient light color
 
         gl.uniform1i(uEnableAmbient,enableAmbient);
         gl.uniform1i(uEnableDiffuse,enableDiffuse);
@@ -177,6 +178,9 @@ function main(){
         gl.uniform3f(uLightDirection,ld.x,ld.y,ld.z);
         gl.uniform3f(uLightDiffuse,ldf.r,ldf.g,ldf.b);
         gl.uniform3f(uLightAmbient,amb.r,amb.g,amb.b); //NATURAL LIGHT COLOR
+        //eye  position for specular calculation
+        var eyepos = currentCamera.eye;
+        gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
     }
 /* ------------------------- */
 
@@ -195,7 +199,7 @@ function main(){
         currentCamera.phi = currentCamera.phi + mouse.dy;
         if(currentCamera.theta > 360 || currentCamera.theta < -360) currentCamera.theta = 0;
         if(currentCamera.phi < 0) currentCamera.phi = 0;
-        if(currentCamera.phi > 180) currentCamera.phi = 180;
+        if(currentCamera.phi > 360) currentCamera.phi = 360;
         center.x = eye.x - 100*cosDegree(currentCamera.theta);
         center.y = eye.y - 100*cosDegree( currentCamera.phi );
         center.z = eye.z - 100*sinDegree(currentCamera.theta);
@@ -237,9 +241,7 @@ function main(){
         mat4.perspective(projectionMatrix,glMatrix.toRadian(perspectiveDegrees),aspect,near,far);
         gl.uniformMatrix4fv(uProjection,false,projectionMatrix);
 
-        //i dunno wth is this
-        var eyepos = currentCamera.eyepos;
-        gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
+
     }
     /* ----------------------- */
 
@@ -307,6 +309,11 @@ function main(){
              mouse.x = event.clientX;
              mouse.y = event.clientY;
          };
+         canvas.onmousewheel = function(event){
+             if(event.wheelDelta < 0)
+                currentCamera.near -= 1;
+             else currentCamera.near += 1;
+         };
 
          document.body.onkeyup = function(event){
              event = event || window.event;
@@ -342,6 +349,7 @@ function main(){
          canvas.onclick = function(event){
              mouse.x = event.clientX;
              mouse.y = event.clientY;
+             lwallBox.rotationY+=5;
          };
          canvas.onmousemove = function(event){
              var screenCenter = {
@@ -365,18 +373,17 @@ function main(){
 
          var cameraSettings = {
              eye : {
-                 x:0,
-                 y:25,
-                 z:90,
-                 direction : null
+                 x:85,
+                 y:85,
+                 z:85
              },
              center : {
                  x: 0,
                  y: 0,
                  z: 0
              },
-             theta: 90, //in degrees
-             phi: 90,
+             theta: 45, //in degrees
+             phi: 45,
              up : {
                  x: 0,
                  y: 1,
@@ -436,8 +443,8 @@ function main(){
 
          Materials.SILVER_MARBLE = function (){
              gl.uniform1i(uSampler, 0);
-             gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
-             gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+             gl.uniform3f(uMaterialDiffuse,0.5,0.5,0.5);
+             gl.uniform3f(uMaterialSpecular,0.5,0.5,0.5); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
              gl.uniform1f(uShininess,1.0);
          };
@@ -617,41 +624,35 @@ function Box(w,l,d,material){
         -w,  l, -d
     ];
     this.normals = [   // Coorlinates
-        // Front face
-        -w, -l,  d,
-        w, -l,  d,
-        w,  l,  d,
-        -w,  l,  d,
+        -1,-1,1,//front
+        1,-1,1,
+        1,1,1,
+        -1,1,1,
 
-        // Back face
-        -w, -l, -d,
-        -w,  l, -d,
-        w,  l, -d,
-        w, -l, -d,
+        -1,-1,-1,//Back
+        -1,1,-1,
+        1,1,-1,
+        1,-1,-1,
 
-        // Top face
-        -w,  l, -d,
-        -w,  l,  d,
-        w,  l,  d,
-        w,  l, -d,
+        -1,1,-1,//top
+        -1,1,1,
+        1,1,1,
+        1,1,-1,
 
-        // Bottom face
-        -w, -l, -d,
-        w, -l, -d,
-        w, -l,  d,
-        -w, -l,  d,
+        -1,-1,-1,//bottom
+        1,-1,-1,
+        1,-1,1,
+        -1,-1,1,
 
-        // Right face
-        w, -l, -d,
-        w,  l, -d,
-        w,  l,  d,
-        w, -l,  d,
+        1,-1,-1,//right
+        1,1,-1,
+        1,1,1,
+        1,-1,1,
 
-        // Left face
-        -w, -l, -d,
-        -w, -l,  d,
-        -w,  l,  d,
-        -w,  l, -d
+        -1,-1,-1,//left
+        -1,-1,1,
+        -1,1,1,
+        -1,1,-1
     ];
     this.texCoords = [   // Coorlinates
         // Front

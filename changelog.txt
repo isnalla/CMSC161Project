@@ -8,6 +8,9 @@
 
     - fixed texture mapping
     - removed overlapping
+    - fixed cube normals
+    - todo: fix floor overlaps
+        --temporarily added gap on floors for easier adjusting
 
 20/03/2014
     - added brass material taken from example from slides
