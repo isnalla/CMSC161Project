@@ -30,33 +30,34 @@ function main(){
 
     //Box(w,l,d,material)  material = material properties and texture
     var lwallBox = new Box(30.75,3.0,0.25,Materials.SILVER_MARBLE);
-    var swallBox = new Box(28.25,3.0,0.25,Materials.SILVER_MARBLE);
-    var _vcorridor = new Box(23,2,0.0001,Materials.SILVER_MARBLE);
-    var _htcorridor = new Box(3,30,0.0001,Materials.SILVER_MARBLE);
-    var _hbcorridor = new Box(2,30,0.0001,Materials.SILVER_MARBLE);
+    var swallBox = new Box(28,3.0,0.25,Materials.SILVER_MARBLE);
+    var _vcorridor = new Box(20,2.25,0.0001,Materials.SILVER_MARBLE);
+    var _hcorridor = new Box(2.625,30.5,0.0001,Materials.SILVER_MARBLE);
     var _2x10floor = new Box(2,10,0.0001,Materials.SILVER_MARBLE);
-    var _2x12floor = new Box(2,12,0.0001,Materials.SILVER_MARBLE);
-    var _2x30floor = new Box(1.5,30,0.0001,Materials.SILVER_MARBLE);
+    var _2x12floor = new Box(2,12.375,0.0001,Materials.SILVER_MARBLE);
+    var _2x30floor = new Box(1.875,30.5,0.0001,Materials.SILVER_MARBLE);
     var _5x9floor = new Box(5,9,0.001,Materials.RED_STONE);
     var _5x6floor = new Box(5,6,0.001,Materials.BLACK_WHITE);
-    var _5x5floor = new Box(5,6,0.001,Materials.DARK_YELLOW);
+    var _5x5floor = new Box(5.25,5,0.002,Materials.DARK_YELLOW);
     var _lkfloor = new Box(5,9,0.001,Materials.BLACK_WHITE);
-    var _wcrfloor = new Box(3,6,0.001,Materials.WOMEN);
-    var _mcrfloor = new Box(3,6,0.001,Materials.MEN);
+    var _wcrfloor = new Box(3,6,0.002,Materials.WOMEN);
+    var _mcrfloor = new Box(3,6,0.002,Materials.MEN);
 
-    var _1mBox = new Box(1.0,3.0,0.25,Materials.VINYL);
-    var _2mBox = new Box(2.0,3.0,0.25,Materials.VINYL);
-    var _3mBox = new Box(3.0,3.0,0.25,Materials.VINYL);
-    var _4mBox = new Box(4.0,3.0,0.25,Materials.VINYL);
-    var _5mBox = new Box(5.0,3.0,0.25,Materials.VINYL);
-    var _6mBox = new Box(6.0,3.0,0.25,Materials.VINYL);
-    var _6mBox = new Box(6.0,3.0,0.25,Materials.VINYL);
-    var _8mBox = new Box(8.0,3.0,0.25,Materials.VINYL);
-    var _9mBox = new Box(9.0,3.0,0.25,Materials.VINYL);
+    var _1mBox = new Box(0.75,3.0,0.25,Materials.VINYL);
+    var _2mBox = new Box(1.75,3.0,0.25,Materials.VINYL);
+    var _3mBox = new Box(2.75,3.0,0.25,Materials.VINYL);
+    var _4m2Box = new Box(4.25,3.0,0.25,Materials.VINYL);
+
+    var _4mBox = new Box(3.75,3.0,0.25,Materials.VINYL);
+    var _5mBox = new Box(4.75,3.0,0.25,Materials.VINYL);
+    var _6mBox = new Box(6.25,3.0,0.25,Materials.VINYL);
+    var _8mBox = new Box(8.25,3.0,0.25,Materials.VINYL);
+    var _9mBox = new Box(9.25,3.0,0.25,Materials.VINYL);
     var _10mBox = new Box(10.0,3.0,0.25,Materials.VINYL);
     var _13mBox = new Box(13.0,3.0,0.25,Materials.VINYL);
-    var _17mBox = new Box(17.0,3.0,0.25,Materials.VINYL);
-    var _20mBox = new Box(20.0,3.0,0.25,Materials.VINYL);
+    var _17mBox = new Box(16.75,3.0,0.25,Materials.VINYL);
+    var _20mBox = new Box(19.75,3.0,0.25,Materials.VINYL);
+
 
     animate();
 
@@ -75,31 +76,31 @@ function main(){
     function drawScene(){
 //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
         //floors
-        drawObject(_vcorridor,[3.5,0,6],90,0);
-        drawObject(_vcorridor,[3.5,0,-6],90,0);
-        drawObject(_vcorridor,[3.5,0,-28],90,0);
-        drawObject(_vcorridor,[3.5,0,28],90,0);
-        drawObject(_htcorridor,[24,0,0],90,0);
-        drawObject(_hbcorridor,[-21,0,0],90,0);
-        drawObject(_5x9floor,[-4,0,17],90,0);
-        drawObject(_5x9floor,[6,0,17],90,0);
-        drawObject(_5x9floor,[16,0,17],90,0);
-        drawObject(_5x9floor,[6,0,-17],90,0);
-        drawObject(_5x9floor,[-4,0,-17],90,0);
-        drawObject(_5x9floor,[-14,0,-17],90,0);
-        drawObject(_5x6floor,[16,0,-20],90,0);
-        drawObject(_lkfloor,[-14,0,17],90,0);
-        drawObject(_5x5floor,[16,0,-10],90,0);
-        drawObject(_wcrfloor,[-22,0,22],90,0);
-        drawObject(_mcrfloor,[-22,0,-22],90,0);
-        drawObject(_2x10floor,[-25,0,-20],90,0);
-        drawObject(_2x12floor,[-25,0,18],90,0);
-        drawObject(_2x30floor,[-28.5,0,0],90,0);
+        drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
+        drawObject(_vcorridor,[1,0,-6],90,0);
+        drawObject(_vcorridor,[1,0,-28],90,0);
+        drawObject(_vcorridor,[1,0,28.5],90,0);
+        drawObject(_hcorridor,[23.625,0,0],90,0);   //horizontal corridors
+        drawObject(_5x9floor,[-4.25,0,17],90,0);    //5x9 floors
+        drawObject(_5x9floor,[5.75,0,17],90,0);
+        drawObject(_5x9floor,[15.75,0,17],90,0);
+        drawObject(_5x9floor,[5.75,0,-17],90,0);
+        drawObject(_5x9floor,[-4.25,0,-17],90,0);
+        drawObject(_5x9floor,[-14.25,0,-17],90,0);
+        drawObject(_5x6floor,[15.75,0,-20],90,0);   //board room floor
+        drawObject(_lkfloor,[-14.25,0,17],90,0);    //lounge & kitchen floor
+        drawObject(_5x5floor,[16,0,-9],90,0);       //patio
+        drawObject(_wcrfloor,[-22,0,22],90,0);      //women's cr floor
+        drawObject(_mcrfloor,[-22,0,-22],90,0);     //men's cr floor
+        drawObject(_2x10floor,[-25,0,-20.25],90,0); //floors around front stairs
+        drawObject(_2x12floor,[-25,0,18.375],90,0);
+        drawObject(_2x30floor,[-21.125,0,0],90,0);
+        drawObject(_2x30floor,[-28.875,0,0],90,0);
         //outer walls
-        drawObject(swallBox,[-2.5,0,30.5],0,0);
+        drawObject(swallBox,[-2.25,0,30.5],0,0);
         drawObject(lwallBox,[-30.5,0,0],0,90);
         drawObject(lwallBox,[26.0,0,0],0,90);
-        drawObject(swallBox,[-2.5,0,-30.5],0,0);
+        drawObject(swallBox,[-2.25,0,-30.5],0,0);
         //right rooms border walls
         drawObject(_1mBox,[20,0,8],0,0);
         drawObject(_8mBox,[-19,0,22],0,90);
@@ -116,9 +117,9 @@ function main(){
         drawObject(_3mBox,[-9,0,23],0,90);
         drawObject(_4mBox,[-9,0,12],0,90);
         //kitchen corner - left wall
-        drawObject(_3mBox,[-12,0,20],0,0);
+        drawObject(_3mBox,[-11.5,0,20],0,0);
         //walls on void
-        drawObject(_4mBox,[21,0,0],0,90);
+        drawObject(_4m2Box,[21,0,0],0,90);
         drawObject(_10mBox,[-19,0,0],0,90);
         drawObject(_20mBox,[1,0,4],0,0);
         drawObject(_20mBox,[1,0,-4],0,0);
@@ -149,13 +150,12 @@ function main(){
         drawObject(_6mBox,[-25,0,-22],0,90);
         //stairs(entrance)
         drawObject(_2mBox,[-25,0,-10],0,0);
-        drawObject(_2mBox,[-25,0,6],0,0);
         drawObject(_8mBox,[-27,0,-2],0,90);
         drawObject(_8mBox,[-23,0,-2],0,90);
         //stairs(exit)
-        drawObject(_2mBox,[29,0,4],0,0);
-        drawObject(_2mBox,[29,0,-6],0,0);
-        drawObject(_5mBox,[31,0,-1],0,90);
+        drawObject(_2mBox,[28,0,4],0,0);
+        drawObject(_2mBox,[28,0,-6],0,0);
+        drawObject(_5mBox,[29.5,0,-1],0,90);
 
     }
 
@@ -194,30 +194,32 @@ function main(){
         currentCamera.theta = currentCamera.theta + mouse.dx;
         currentCamera.phi = currentCamera.phi + mouse.dy;
         if(currentCamera.theta > 360 || currentCamera.theta < -360) currentCamera.theta = 0;
-        if(currentCamera.phi < 60) currentCamera.phi = 60;
-        if(currentCamera.phi > 120) currentCamera.phi = 120;
+        if(currentCamera.phi < 0) currentCamera.phi = 0;
+        if(currentCamera.phi > 180) currentCamera.phi = 180;
         center.x = eye.x - 100*cosDegree(currentCamera.theta);
         center.y = eye.y - 100*cosDegree( currentCamera.phi );
         center.z = eye.z - 100*sinDegree(currentCamera.theta);
-
         if(!hasCollision()){
+            var tunedSpeed = 0.1*currentCamera.moveSpeed;
             if(currentCamera.moveForward){
-                eye.x = eye.x - 0.3*cosDegree(currentCamera.theta);
-                eye.y = eye.y - 0.3*cosDegree( currentCamera.phi );
-                eye.z = eye.z - 0.3*sinDegree(currentCamera.theta);
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta);
+                if(currentCamera.upMovable)
+                    eye.y = eye.y - tunedSpeed*cosDegree( currentCamera.phi );
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta);
             }
             if(currentCamera.moveBackward){
-                eye.x = eye.x - 0.3*cosDegree(currentCamera.theta - 180);
-                eye.y = eye.y - 0.3*cosDegree(currentCamera.phi - 180);
-                eye.z = eye.z - 0.3*sinDegree(currentCamera.theta - 180);
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 180);
+                if(currentCamera.upMovable)
+                    eye.y = eye.y - tunedSpeed*cosDegree(currentCamera.phi - 180);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 180);
             }
             if(currentCamera.moveLeft){
-                eye.x = eye.x - 0.3*cosDegree(currentCamera.theta - 90);
-                eye.z = eye.z - 0.3*sinDegree(currentCamera.theta - 90);
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 90);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 90);
             }
             if(currentCamera.moveRight){
-                eye.x = eye.x - 0.3*cosDegree(currentCamera.theta + 90);
-                eye.z = eye.z - 0.3*sinDegree(currentCamera.theta + 90);
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta + 90);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta + 90);
             }
         }
 
@@ -329,6 +331,10 @@ function main(){
                  case 83: /*S*/ currentCamera.moveBackward = true; break;
 
                  case 68: /*D*/ currentCamera.moveRight = true; break;
+                 /*V*/
+                 case 86: if(currentCamera == fpCamera) currentCamera = freeCamera;
+                            else currentCamera = fpCamera;
+                     break;
              }
 
          };
@@ -336,15 +342,6 @@ function main(){
          canvas.onclick = function(event){
              mouse.x = event.clientX;
              mouse.y = event.clientY;
-             var eye = currentCamera.eye;
-             currentCamera.theta = currentCamera.theta + mouse.dx;
-             currentCamera.phi = currentCamera.phi + mouse.dy;
-             if(currentCamera.theta > 360 || currentCamera.theta < -360) currentCamera.theta = 0;
-             if(currentCamera.phi < 60) currentCamera.phi = 60;
-             if(currentCamera.phi > 120) currentCamera.phi = 120;
-             eye.x = eye.x - 5*cosDegree(currentCamera.theta);
-             eye.y = eye.y - 5*cosDegree( currentCamera.phi );
-             eye.z = eye.z - 5*sinDegree(currentCamera.theta);
          };
          canvas.onmousemove = function(event){
              var screenCenter = {
@@ -366,11 +363,11 @@ function main(){
              sensitivity : 3
          };
 
-         var currentCameraSettings = {
+         var cameraSettings = {
              eye : {
                  x:0,
                  y:25,
-                 z:100,
+                 z:90,
                  direction : null
              },
              center : {
@@ -389,12 +386,14 @@ function main(){
              far: 500,
              perspectiveDegrees : 30,
              eyepos : {x:50,y:50,z:50},
-             upMovable : false
+             upMovable : true,
+             moveSpeed: 3
          };
-         freeCamera = new Camera(currentCameraSettings);
-         currentCameraSettings.eye = {x:0,y:5,z:0};
-         currentCameraSettings.eye.upMovable = true;
-         fpCamera = new Camera(currentCameraSettings);
+         freeCamera = new Camera(cameraSettings);
+         cameraSettings.eye = {x:0,y:1,z:0};
+         cameraSettings.upMovable = false;
+         cameraSettings.moveSpeed = 1;
+         fpCamera = new Camera(cameraSettings);
          currentCamera = freeCamera;
          globalGL = initializeWebGL(canvas);
          gl = globalGL;
@@ -548,20 +547,22 @@ function main(){
   *************************** END MAIN *****************************************
  */
 /* Camera settings, not yet implemented */
-function Camera(currentCameraSettings){
-    this.eye = currentCameraSettings.eye;
-    this.center = currentCameraSettings.center;
-    this.theta = currentCameraSettings.theta;
-    this.phi = currentCameraSettings.phi;
-    this.up = currentCameraSettings.up;
-    this.near = currentCameraSettings.near;
-    this.far = currentCameraSettings.far;
-    this.perspectiveDegrees = currentCameraSettings.perspectiveDegrees;
-    this.eyepos = currentCameraSettings.eyepos;
+function Camera(cameraSettings){
+    this.eye = cameraSettings.eye;
+    this.center = cameraSettings.center;
+    this.theta = cameraSettings.theta;
+    this.phi = cameraSettings.phi;
+    this.up = cameraSettings.up;
+    this.near = cameraSettings.near;
+    this.far = cameraSettings.far;
+    this.perspectiveDegrees = cameraSettings.perspectiveDegrees;
+    this.eyepos = cameraSettings.eyepos;
     this.moveForward = false;
     this.moveBackward = false;
     this.moveLeft = false;
     this.moveRight = false;
+    this.moveSpeed = cameraSettings.moveSpeed;
+    this.upMovable = cameraSettings.upMovable;
 }
 
 /* Box Class */
@@ -653,7 +654,7 @@ function Box(w,l,d,material){
         -w,  l, -d
     ];
     this.texCoords = [   // Coorlinates
-        // Frontp''
+        // Front
         0.0,  0.0,
         w,    0.0,
         w,    l,
@@ -675,14 +676,14 @@ function Box(w,l,d,material){
         w,    d,
         0.0,  d,
         // Right
-        w,    0.0,
-        w,    l,
+        d,    0.0,
+        d,    l,
         0.0,  l,
         0.0,  0.0,
         // Left
         0.0,  0.0,
-        w,    0.0,
-        w,    l,
+        d,    0.0,
+        d,    l,
         0.0,  l
     ];
     this.material = material;
