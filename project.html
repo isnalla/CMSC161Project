@@ -21,6 +21,7 @@
         <script type="x-shader/x-vertex" id="vshader">
             attribute vec3 aPosition;
             attribute vec2 aTexCoords;
+
             attribute vec3 aNormal;
 
             uniform mat4 uModel;
@@ -82,7 +83,6 @@
                 vec3 normalized_eyeDirection = normalize(eyeDirection);
                 vec3 reflectDirection = reflect(normalized_uLightDirection,normalized_aNormal);
                 vec3 normalized_reflectDirection = normalize(reflectDirection);
-
                 //ambient
                 if(uEnableAmbient) {
                     ambientColor = uLightAmbient * uMaterialAmbient;
