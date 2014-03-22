@@ -6,6 +6,9 @@
     - added new walls,floor, void in middle, void in stairs
         TODO: adjust intersecting objects
 
+    - fixed texture mapping
+    - removed overlapping
+
 20/03/2014
     - added brass material taken from example from slides
 19/03/2014
