@@ -1,8 +1,5 @@
 22/03/2914
-    -   improved vertex coordinates (shorter vertices and indices array length)
-    -   added new texture images
-    -   changed order of formal parameters of box (l,w,h -> w,l,h)
-    TODO: fix texture mapping for improved vertices array
+    - reorganized code
 
 20/03/2014
     - added brass material taken from example from slides

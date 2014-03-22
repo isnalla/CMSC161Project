@@ -21,7 +21,6 @@
         <script type="x-shader/x-vertex" id="vshader">
             attribute vec3 aPosition;
             attribute vec2 aTexCoords;
-
             attribute vec3 aNormal;
 
             uniform mat4 uModel;
@@ -46,9 +45,8 @@
             }
         </script>
         <script type="x-shader/x-fragment" id="fshader">
-            //#ifdef GL_ES
-            precision highp float;
-            //#endif
+            precision mediump float;
+
             uniform sampler2D uSampler;
 
             uniform vec3 uLightDirection;
@@ -84,23 +82,24 @@
                 vec3 normalized_eyeDirection = normalize(eyeDirection);
                 vec3 reflectDirection = reflect(normalized_uLightDirection,normalized_aNormal);
                 vec3 normalized_reflectDirection = normalize(reflectDirection);
+
                 //ambient
                 if(uEnableAmbient) {
-                ambientColor = uLightAmbient * uMaterialAmbient;
+                    ambientColor = uLightAmbient * uMaterialAmbient;
                 }
                 //diffuse
                 if(uEnableDiffuse) {
 
-                float lambertCoefficient = max(dot(-normalized_uLightDirection,normalized_aNormal),0.0);
-                diffuseColor =  uLightDiffuse * uMaterialDiffuse * lambertCoefficient;
+                    float lambertCoefficient = max(dot(-normalized_uLightDirection,normalized_aNormal),0.0);
+                    diffuseColor =  uLightDiffuse * uMaterialDiffuse * lambertCoefficient;
                 }
                 //specular
                 if(uEnableSpecular) {
 
-                float specularCoefficient = max(dot(normalized_reflectDirection,normalized_eyeDirection),0.0);
-                specularCoefficient = pow(specularCoefficient,uShininess);
-                specularColor =  uLightSpecular * uMaterialSpecular * specularCoefficient;
-                //specularColor = vec3(1.0,1.0,1.0) * specularCoefficient;
+                    float specularCoefficient = max(dot(normalized_reflectDirection,normalized_eyeDirection),0.0);
+                    specularCoefficient = pow(specularCoefficient,uShininess);
+                    specularColor =  uLightSpecular * uMaterialSpecular * specularCoefficient;
+                    //specularColor = vec3(1.0,1.0,1.0) * specularCoefficient;
                 }
 
                 vec4 texColor = texture2D(uSampler, vTexCoords);
