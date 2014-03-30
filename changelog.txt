@@ -1,4 +1,10 @@
-22/03/2914
+30/3/2014
+    - revised drawing of objects (box type objects)
+        *now the drawObject draws the object per side and not as a whole for texture reasons
+    - revised a parameter on box
+        *now, the third parameter accepts an array of 1, 3, or 6 Materials.<NameOfTexture>
+
+22/03/2014
     - reorganized code
     - added new materials
     - new feature: freeview camera
@@ -11,11 +17,13 @@
 
 20/03/2014
     - added brass material taken from example from slides
+
 19/03/2014
     - initial commit
     - modular version
     - features:
         - simplified definition/drawing of objects
         - definition of object
+
 18/03/2014
     - started development

@@ -28,36 +28,40 @@ function main(){
 
     initializeWebGLVariables(); //initialize variables declared above
 
-    //Box(w,l,d,material)  material = material properties and texture
-    var lwallBox = new Box(30.75,3.0,0.25,Materials.SILVER_MARBLE);
-    var swallBox = new Box(28,3.0,0.25,Materials.SILVER_MARBLE);
-    var _vcorridor = new Box(20,2.25,0.0001,Materials.SILVER_MARBLE);
-    var _hcorridor = new Box(2.625,30.5,0.0001,Materials.SILVER_MARBLE);
-    var _2x10floor = new Box(2,10,0.0001,Materials.SILVER_MARBLE);
-    var _2x12floor = new Box(2,12.375,0.0001,Materials.SILVER_MARBLE);
-    var _2x30floor = new Box(1.875,30.5,0.0001,Materials.SILVER_MARBLE);
-    var _5x9floor = new Box(5,9,0.001,Materials.RED_STONE);
-    var _5x6floor = new Box(5,6,0.001,Materials.BLACK_WHITE);
-    var _5x5floor = new Box(5.25,5,0.002,Materials.DARK_YELLOW);
-    var _lkfloor = new Box(5,9,0.001,Materials.BLACK_WHITE);
-    var _wcrfloor = new Box(3,6,0.002,Materials.WOMEN);
-    var _mcrfloor = new Box(3,6,0.002,Materials.MEN);
+    //Box(w,l,d,[material])  material = material properties and texture
+    //Box(w,l,d,[material1, material2, material3])  [] = [front/back, top/bottom, right/left]
+    //Box(w,l,d,[material1, material2, material3, material4, material5, material6])    [] = [front, back, top, bottom, right, left]
 
-    var _1mBox = new Box(0.75,3.0,0.25,Materials.VINYL);
-    var _2mBox = new Box(1.75,3.0,0.25,Materials.VINYL);
-    var _3mBox = new Box(2.75,3.0,0.25,Materials.VINYL);
-    var _4m2Box = new Box(4.25,3.0,0.25,Materials.VINYL);
+    var lwallBox = new Box(30.75,3.0,0.25,[Materials.SILVER_MARBLE]);
+    var swallBox = new Box(28,3.0,0.25,[Materials.SILVER_MARBLE]);
+    var _vcorridor = new Box(20,2.25,0.0001,[Materials.SILVER_MARBLE]);
+    var _hcorridor = new Box(2.625,30.5,0.0001,[Materials.SILVER_MARBLE]);
+    var _2x10floor = new Box(2,10,0.0001,[Materials.SILVER_MARBLE]);
+    var _2x12floor = new Box(2,12.375,0.0001,[Materials.SILVER_MARBLE]);
+    var _2x30floor = new Box(1.875,30.5,0.0001,[Materials.SILVER_MARBLE]);
+    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE]);
+    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE]);
+    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW]);
+    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE]);
+    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN]);
+    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN]);
 
-    var _4mBox = new Box(3.75,3.0,0.25,Materials.VINYL);
-    var _5mBox = new Box(4.75,3.0,0.25,Materials.VINYL);
-    var _6mBox = new Box(6.25,3.0,0.25,Materials.VINYL);
-    var _8mBox = new Box(8.25,3.0,0.25,Materials.VINYL);
-    var _9mBox = new Box(9.25,3.0,0.25,Materials.VINYL);
-    var _10mBox = new Box(10.0,3.0,0.25,Materials.VINYL);
-    var _13mBox = new Box(13.0,3.0,0.25,Materials.VINYL);
-    var _17mBox = new Box(16.75,3.0,0.25,Materials.VINYL);
-    var _20mBox = new Box(19.75,3.0,0.25,Materials.VINYL);
+    var _1mBox = new Box(0.75,3.0,0.25,[Materials.VINYL]);
+    var _2mBox = new Box(1.75,3.0,0.25,[Materials.VINYL]);
+    var _3mBox = new Box(2.75,3.0,0.25,[Materials.VINYL]);
+    var _4m2Box = new Box(4.25,3.0,0.25,[Materials.VINYL]);
 
+    var _4mBox = new Box(3.75,3.0,0.25,[Materials.VINYL]);
+    var _5mBox = new Box(4.75,3.0,0.25,[Materials.VINYL]);
+    var _6mBox = new Box(6.25,3.0,0.25,[Materials.VINYL]);
+    var _8mBox = new Box(8.25,3.0,0.25,[Materials.VINYL]);
+    var _9mBox = new Box(9.25,3.0,0.25,[Materials.VINYL]);
+    var _10mBox = new Box(10.0,3.0,0.25,[Materials.VINYL]);
+    var _13mBox = new Box(13.0,3.0,0.25,[Materials.VINYL]);
+    var _17mBox = new Box(16.75,3.0,0.25,[Materials.VINYL]);
+    var _20mBox = new Box(19.75,3.0,0.25,[Materials.VINYL]);
+
+    var woodendoor = new Box(1,2,0.2,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL]);
 
     animate();
 
@@ -157,6 +161,7 @@ function main(){
         drawObject(_2mBox,[28,0,-6],0,0);
         drawObject(_5mBox,[29.5,0,-1],0,90);
 
+        drawObject(woodendoor,[0,10,50],0,0);
     }
 
     /* --- Lighting Settings --- */
@@ -244,9 +249,13 @@ function main(){
     /* ----------------------- */
 
     /*** Binds the object to draw to the webGL Array Buffer ***/
+    /*
+     * Note: Draw method only applies for box type objects
+     *
+     */
+
     function drawObject(model,position,rotationX,rotationY){
         if(imagesArray['seamless-marble-tile'].ready){
-            setMaterial(model.material);  //set Material to be used for rendering (The material is not the object being rendered)
 
             //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
             //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(180+i));
@@ -278,7 +287,25 @@ function main(){
 
             //Draw Scene
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
-            gl.drawElements(gl.TRIANGLES, model.indices.length, gl.UNSIGNED_BYTE, 0);
+
+            setMaterial((model.material)[0]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 0); //render front
+            
+            setMaterial((model.material)[1]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 6); //render back
+            
+            setMaterial((model.material)[2]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 12); //render top
+            
+            setMaterial((model.material)[3]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 18); //render bottom
+            
+            setMaterial((model.material)[4]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 24); //render right
+            
+            setMaterial((model.material)[5]);  //set Material to be used for rendering (The material is not the object being rendered)
+            gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 30); //render left
+            
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         }
     }
@@ -537,7 +564,7 @@ function main(){
              image.onload = function(){
                  handleTextureLoaded(this, gl.createTexture(), this.index); //(this = image , new texture, index in IMAGE_SOURCE_ARRAY)
                  this.ready = true;
-             };
+            };
              image.src = IMAGE_SOURCES_ARRAY[ii].src;
              imagesArray[IMAGE_SOURCES_ARRAY[ii].name] = image;
          }
@@ -579,6 +606,7 @@ function Box(w,l,d,material){
     this.width = w;
     this.length = l;
     this.height = d;
+    this.material = Array();
     this.vertices = [   // Coordinates
         // Front face
         -w, -l,  d,
@@ -686,7 +714,19 @@ function Box(w,l,d,material){
         d,    l,
         0.0,  l
     ];
-    this.material = material;
+
+    jj = material.length;
+    if(material.length == 1)
+        for(iii = 0; iii < 6; iii++)
+            this.material[iii] = material[0];
+    else
+        for(iii = 0; iii < 2; iii++){
+            this.material[0 + iii] = material[0 + (material.length - 3)];
+            this.material[2 + iii] = material[1 + (material.length - 3)];
+            this.material[4 + iii] = material[2 + (material.length - 3)];
+        }
+
+
     this.initBuffers();
 }
 
