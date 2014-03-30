@@ -6,6 +6,7 @@ function main(){
     var vertexShader,fragmentShader;
     var program;
     var gl;
+    var ext;
     //vertex attributes
     var aPosition; //webGL position vertex attribute
     var aNormal;    //webGL normal vertex attribute
@@ -15,7 +16,8 @@ function main(){
     var uNormal;     //webGL normal uniform
     var uView;
     var uProjection;
-    var uSampler;
+    var uSampler0;
+    var uSampler1;
     var uEnableAmbient,uEnableDiffuse, uEnableSpecular, uEyePosition; //webGL light property variables
     var uLightDirection, uLightAmbient, uLightDiffuse, uLightSpecular ;    //webGL material property variables
     var uMaterialAmbient, uMaterialDiffuse, uMaterialSpecular, uShininess ;
@@ -61,22 +63,27 @@ function main(){
     var _17mBox = new Box(16.75,3.0,0.25,[Materials.VINYL]);
     var _20mBox = new Box(19.75,3.0,0.25,[Materials.VINYL]);
 
-    var woodendoor = new Box(1,2,0.2,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL]);
+    var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL]);
 
     animate();
 
-    function animate(){
-        gl.clearColor(0, 0, 0, 1);
+	function animate(){
+	    gl.clearColor(0, 0, 0, 1);
         gl.enable(gl.DEPTH_TEST);
-        gl.viewport(0,0,canvas.width,canvas.height);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        //gl.disable(gl.DEPTH_TEST);
 
-        setLighting();
-        setCamera();
-        drawScene();
+		gl.enable(gl.BLEND);
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        requestAnimFrame(animate);
-    }
+	    gl.viewport(0,0,canvas.width,canvas.height);
+	    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	    setLighting();
+	    setCamera();
+	    drawScene();
+
+	    requestAnimFrame(animate);
+	}
     function drawScene(){
 //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
         //floors
@@ -161,7 +168,10 @@ function main(){
         drawObject(_2mBox,[28,0,-6],0,0);
         drawObject(_5mBox,[29.5,0,-1],0,90);
 
-        drawObject(woodendoor,[0,10,50],0,0);
+        drawObject(woodendoor,[-3,10,50],0,90);
+        drawObject(woodendoor,[-1.5,10,50],0,0);
+        drawObject(woodendoor,[1.5,10,50],0,180);
+        drawObject(woodendoor,[3,10,50],0,-90);
     }
 
     /* --- Lighting Settings --- */
@@ -255,7 +265,7 @@ function main(){
      */
 
     function drawObject(model,position,rotationX,rotationY){
-        if(imagesArray['seamless-marble-tile'].ready){
+        if(imagesArray['seamless-marble-tile'].ready ){
 
             //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
             //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(180+i));
@@ -285,6 +295,19 @@ function main(){
             gl.bindBuffer(gl.ARRAY_BUFFER, model.texCoordsBuffer);
             gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
 
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.FRONT);
+            draw(model);
+
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(gl.BACK);
+            draw(model);
+            
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        }
+    }
+
+    function draw(model){
             //Draw Scene
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
 
@@ -305,26 +328,29 @@ function main(){
             
             setMaterial((model.material)[5]);  //set Material to be used for rendering (The material is not the object being rendered)
             gl.drawElements(gl.TRIANGLES, model.indices.length/6, gl.UNSIGNED_BYTE, 30); //render left
-            
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-        }
+
     }
 
     /*** Sets the material properties to be used drawing/rendering an object ***/
     function setMaterial(material){
         material();
     }
+
+
     function handleTextureLoaded(image, texture, index){
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
         gl.activeTexture(gl.TEXTURE0 + index);  //Assigns texture from TEXTURE0 to TEXURE(n-1)  ; n = number of textures
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB  , gl.UNSIGNED_BYTE, image);
+        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_ANISOTROPY_EXT, 4);
+        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_ANISOTROPY_EXTX_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        //gl.compressedTexImage2D(gl.TEXTURE_2D, 0, ext.COMPRESSED_RGBA_S3TC_DXT5_EXT, 512, 512, 0, textureData); 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);        
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA  , gl.UNSIGNED_BYTE, image);
         gl.generateMipmap(gl.TEXTURE_2D);
     }
-
-     function initializeWebGLVariables(){
+    
+    function initializeWebGLVariables(){
          canvas = document.getElementById("c");
          canvas.height = canvas.clientHeight;
          canvas.width = canvas.clientWidth;
@@ -424,6 +450,11 @@ function main(){
          currentCamera = freeCamera;
          globalGL = initializeWebGL(canvas);
          gl = globalGL;
+         ext = (
+           gl.getExtension('EXT_texture_filter_anisotropic') ||
+           gl.getExtension('MOZ_EXT_texture_filter_anisotropic') ||
+           gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic')
+         );
          vertexShader = initializeShader(gl,"vshader");
          fragmentShader = initializeShader(gl, "fshader");
          program = initializeProgram(gl,vertexShader,fragmentShader);
@@ -437,7 +468,8 @@ function main(){
          uView = gl.getUniformLocation(program,"uView");         // viewMatrix attr
          uProjection = gl.getUniformLocation(program,"uProjection"); // projectionMatrix attr
          aTexCoords = gl.getAttribLocation(program,"aTexCoords");    //texture Mapping Buffer attr
-         uSampler = gl.getUniformLocation(program, 'uSampler');      //texture Sampler attr (picker)
+         uSampler0 = gl.getUniformLocation(program, 'uSampler0');      //texture Sampler attr (picker)
+         uSampler1 = gl.getUniformLocation(program, 'uSampler1');      //texture Sampler attr (picker)
          gl.enableVertexAttribArray(aPosition);
          gl.enableVertexAttribArray(aNormal);
          gl.enableVertexAttribArray(aTexCoords);
@@ -459,10 +491,11 @@ function main(){
          /********** INIT MATRIX VARIABLES ******************/
          viewMatrix = mat4.create();
          projectionMatrix = mat4.create();
+
          Materials = {};
 
          Materials.SILVER_MARBLE = function (){
-             gl.uniform1i(uSampler, 0);
+             gl.uniform1i(uSampler0, 0);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -470,7 +503,7 @@ function main(){
          };
 
          Materials.SEAMLESS_MARBLE = function (){
-             gl.uniform1i(uSampler, 1);
+             gl.uniform1i(uSampler0, 1);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -479,7 +512,7 @@ function main(){
 
 
          Materials.RED_STONE = function (){
-             gl.uniform1i(uSampler, 2);
+             gl.uniform1i(uSampler0, 2);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -487,7 +520,7 @@ function main(){
          };
 
          Materials.VINYL = function (){
-             gl.uniform1i(uSampler, 3);
+             gl.uniform1i(uSampler0, 3);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -495,7 +528,7 @@ function main(){
          };
 
          Materials.DOOR = function (){
-             gl.uniform1i(uSampler, 4);
+             gl.uniform1i(uSampler0, 4);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -503,7 +536,7 @@ function main(){
          };
 
          Materials.MEN = function (){
-             gl.uniform1i(uSampler, 5);
+             gl.uniform1i(uSampler0, 5);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -511,7 +544,7 @@ function main(){
          };
 
          Materials.WOMEN = function (){
-             gl.uniform1i(uSampler, 6);
+             gl.uniform1i(uSampler0, 6);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -519,7 +552,7 @@ function main(){
          };
 
          Materials.BLACK_WHITE = function (){
-             gl.uniform1i(uSampler, 7);
+             gl.uniform1i(uSampler0, 7);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -527,7 +560,7 @@ function main(){
          };
 
          Materials.DARK_YELLOW = function (){
-             gl.uniform1i(uSampler, 8);
+             gl.uniform1i(uSampler0, 8);
              gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
              gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -536,7 +569,7 @@ function main(){
 
          //Brass - texture yet just material properties
          Materials.BRASS = function (){  //taken from slidess
-             gl.uniform1i(uSampler, 0);  //change this
+             gl.uniform1i(uSampler0, 0);  //change this
              gl.uniform3f(uMaterialDiffuse,0.78, 0.57, 0.11);
              gl.uniform3f(uMaterialSpecular,0.99, 0.91, 0.81); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
              gl.uniform3f(uMaterialAmbient,0.33,0.22,0.03); //COLOR REFLECTED FROM AMBIENT LIGHT
@@ -548,7 +581,7 @@ function main(){
              {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
              {name:'red-stone-tile',src:'textures/red-stone-tile.png'},
              {name:'vinyl-tile',src:'textures/vinyl-tile.png'},
-             {name:'door',src:'textures/door.png'},
+             {name:'door',src:'textures/door2.png'},
              {name:'men',src:'textures/mcr.png'},
              {name:'women',src:'textures/wcr.png'},
              {name:'black_white',src:'textures/marble-black-white.png'},
@@ -565,10 +598,10 @@ function main(){
                  handleTextureLoaded(this, gl.createTexture(), this.index); //(this = image , new texture, index in IMAGE_SOURCE_ARRAY)
                  this.ready = true;
             };
-             image.src = IMAGE_SOURCES_ARRAY[ii].src;
-             imagesArray[IMAGE_SOURCES_ARRAY[ii].name] = image;
+            image.src = IMAGE_SOURCES_ARRAY[ii].src;
+            imagesArray[IMAGE_SOURCES_ARRAY[ii].name] = image;
          }
-     }
+    }
 }
 /**
   *************************** END MAIN *****************************************
@@ -726,12 +759,12 @@ function Box(w,l,d,material){
             this.material[4 + iii] = material[2 + (material.length - 3)];
         }
 
-
     this.initBuffers();
 }
 
 Box.prototype.initBuffers = function(){
     var gl = globalGL;
+
     this.verticesBuffer = gl.createBuffer();
     this.normalBuffer = gl.createBuffer();
     this.indexBuffer = gl.createBuffer();
@@ -743,13 +776,13 @@ Box.prototype.initBuffers = function(){
     gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
 
-
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(this.indices), gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
 };
+
 Box.prototype.indices = [
     0,  1,  2,      0,  2,  3,    // front
     4,  5,  6,      4,  6,  7,    // back

@@ -48,7 +48,7 @@
         <script type="x-shader/x-fragment" id="fshader">
             precision mediump float;
 
-            uniform sampler2D uSampler;
+            uniform sampler2D uSampler0;
 
             uniform vec3 uLightDirection;
             uniform vec3 uEyePosition;
@@ -102,8 +102,8 @@
                     //specularColor = vec3(1.0,1.0,1.0) * specularCoefficient;
                 }
 
-                vec4 texColor = texture2D(uSampler, vTexCoords);
-                vec4 finalColor = vec4(texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                vec4 texColor0 = texture2D(uSampler0, vTexCoords);
+                vec4 finalColor = vec4(texColor0.rgb * ( ambientColor + diffuseColor + specularColor ),texColor0.a);
                 gl_FragColor = finalColor;
             }
         </script>
