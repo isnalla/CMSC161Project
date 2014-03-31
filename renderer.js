@@ -30,40 +30,43 @@ function main(){
 
     initializeWebGLVariables(); //initialize variables declared above
 
-    //Box(w,l,d,[material])  material = material properties and texture
-    //Box(w,l,d,[material1, material2, material3])  [] = [front/back, top/bottom, right/left]
-    //Box(w,l,d,[material1, material2, material3, material4, material5, material6])    [] = [front, back, top, bottom, right, left]
+    //Box(w,l,d,[material],wm,lm,dm)  material = material properties and texture
+    //Box(w,l,d,[material1, material2, material3],wm,lm,dm)  [] = [front/back, top/bottom, right/left]
+    //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
+    //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-    var lwallBox = new Box(30.75,3.0,0.25,[Materials.SILVER_MARBLE]);
-    var swallBox = new Box(28,3.0,0.25,[Materials.SILVER_MARBLE]);
-    var _vcorridor = new Box(20,2.25,0.0001,[Materials.SILVER_MARBLE]);
-    var _hcorridor = new Box(2.625,30.5,0.0001,[Materials.SILVER_MARBLE]);
-    var _2x10floor = new Box(2,10,0.0001,[Materials.SILVER_MARBLE]);
-    var _2x12floor = new Box(2,12.375,0.0001,[Materials.SILVER_MARBLE]);
-    var _2x30floor = new Box(1.875,30.5,0.0001,[Materials.SILVER_MARBLE]);
-    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE]);
-    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE]);
-    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW]);
-    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE]);
-    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN]);
-    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN]);
+    var lwallBox = new Box(30.75,3.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
+    var swallBox = new Box(28,3.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
+    var _vcorridor = new Box(20,2.25,0.0001,[Materials.SILVER_MARBLE],1,1,1);
+    var _hcorridor = new Box(2.625,30.5,0.0001,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x10floor = new Box(2,10,0.0001,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x12floor = new Box(2,12.375,0.0001,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x30floor = new Box(1.875,30.5,0.0001,[Materials.SILVER_MARBLE],1,1,1);
+    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
+    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
+    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
+    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
+    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
+    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
 
-    var _1mBox = new Box(0.75,3.0,0.25,[Materials.VINYL]);
-    var _2mBox = new Box(1.75,3.0,0.25,[Materials.VINYL]);
-    var _3mBox = new Box(2.75,3.0,0.25,[Materials.VINYL]);
-    var _4m2Box = new Box(4.25,3.0,0.25,[Materials.VINYL]);
+    var _1mBox = new Box(0.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _2mBox = new Box(1.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _3mBox = new Box(2.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _4m2Box = new Box(4.25,3.0,0.25,[Materials.VINYL],1,1,1);
 
-    var _4mBox = new Box(3.75,3.0,0.25,[Materials.VINYL]);
-    var _5mBox = new Box(4.75,3.0,0.25,[Materials.VINYL]);
-    var _6mBox = new Box(6.25,3.0,0.25,[Materials.VINYL]);
-    var _8mBox = new Box(8.25,3.0,0.25,[Materials.VINYL]);
-    var _9mBox = new Box(9.25,3.0,0.25,[Materials.VINYL]);
-    var _10mBox = new Box(10.0,3.0,0.25,[Materials.VINYL]);
-    var _13mBox = new Box(13.0,3.0,0.25,[Materials.VINYL]);
-    var _17mBox = new Box(16.75,3.0,0.25,[Materials.VINYL]);
-    var _20mBox = new Box(19.75,3.0,0.25,[Materials.VINYL]);
+    var _4mBox = new Box(3.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _5mBox = new Box(4.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _6mBox = new Box(6.25,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _8mBox = new Box(8.25,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _9mBox = new Box(9.25,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _10mBox = new Box(10.0,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _13mBox = new Box(13.0,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _17mBox = new Box(16.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _20mBox = new Box(19.75,3.0,0.25,[Materials.VINYL],1,1,1);
 
-    var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL]);
+    var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
+    var step = new Box(2,0.25,1,[Materials.RED_STONE],1,1,1);
+    var emergency_step = new Box(0.8,0.2,1,[Materials.BLACK_WHITE],1,1,1);
 
     animate();
 
@@ -172,6 +175,15 @@ function main(){
         drawObject(woodendoor,[-1.5,10,50],0,0);
         drawObject(woodendoor,[1.5,10,50],0,180);
         drawObject(woodendoor,[3,10,50],0,-90);
+
+        for(kkk = 0; kkk<9; kkk++)
+            drawObject(step,[-25,-0.25-kkk*0.5,5-kkk],0,0);
+
+        for(kkk = 0; kkk<9; kkk++)
+            drawObject(emergency_step,[27,0-kkk*0.4,3.2-kkk],0,0);
+
+        for(kkk = 0; kkk<9; kkk++)
+            drawObject(emergency_step,[28.6,-3.5-kkk*0.4,-4.8+kkk],0,0);
     }
 
     /* --- Lighting Settings --- */
@@ -419,8 +431,8 @@ function main(){
          var cameraSettings = {
              eye : {
                  x:0,
-                 y:25,
-                 z:90,
+                 y:10,
+                 z:60,
                  direction : null
              },
              center : {
@@ -438,7 +450,7 @@ function main(){
              near: 1,
              far: 500,
              perspectiveDegrees : 30,
-             eyepos : {x:50,y:50,z:50},
+             eyepos : {x:0,y:0,z:0},
              upMovable : true,
              moveSpeed: 3
          };
@@ -632,7 +644,7 @@ function Camera(cameraSettings){
  * @param d depth
  * @param material wat
  */
-function Box(w,l,d,material){
+function Box(w,l,d,material,wm,lm,dm){
     this.position = [0,0,0];
     this.rotationX = 0;
     this.rotationY = 0;
@@ -716,36 +728,36 @@ function Box(w,l,d,material){
     ];
     this.texCoords = [   // Coorlinates
         // Front
-        0.0,  0.0,
-        w,    0.0,
-        w,    l,
-        0.0,  l,
+        0.0,    0.0,
+        wm*w,   0.0,
+        wm*w,   lm*l,
+        0.0,    lm*l,
         // Back
-        w,    0.0,
-        w,    l,
-        0.0,  l,
-        0.0,  0.0,
+        wm*w,   0.0,
+        wm*w,   lm*l,
+        0.0,    lm*l,
+        0.0,    0.0,
 
         // Top
-        0.0,  d,
-        0.0,  0.0,
-        w,    0.0,
-        w,    d,
+        0.0,    dm*d,
+        0.0,    0.0,
+        wm*w,   0.0,
+        wm*w,   dm*d,
         // Bottom
-        0.0,  0.0,
-        w,    0.0,
-        w,    d,
-        0.0,  d,
+        0.0,    0.0,
+        wm*w,   0.0,
+        wm*w,   dm*d,
+        0.0,    dm*d,
         // Right
-        d,    0.0,
-        d,    l,
-        0.0,  l,
-        0.0,  0.0,
+        dm*d,   0.0,
+        dm*d,   lm*l,
+        0.0,    lm*l,
+        0.0,    0.0,
         // Left
-        0.0,  0.0,
-        d,    0.0,
-        d,    l,
-        0.0,  l
+        0.0,    0.0,
+        dm*d,   0.0,
+        dm*d,   lm*l,
+        0.0,    lm*l
     ];
 
     jj = material.length;
