@@ -11,12 +11,39 @@
         <style>
             * { margin:0; padding:0; } /* to remove the top and left whitespace */
             html, body { width:100%; height:100%; overflow: hidden} /* just to be sure these are full screen*/
-            canvas { display:block; width:100%; height:100%;} /* To remove the scrollbars */
+            canvas { position:fixed;left: 0; width:85%; height:100%;} /* To remove the scrollbars */
+            div#controls {
+                position: fixed;
+                right: 10px;
+            }
         </style>
     </head>
-    <body onload="main()">
-        <canvas id="c">
+    <body>
+
+        <canvas tabindex="1" id="c">
         </canvas>
+        <div id="controls">
+
+            <fieldset>
+                <legend>Light Settings</legend>
+                <label>Direction</label><br/>
+                <label for="ld-x">x:</label><input type="number" id="ld-x"/><br/>
+                <label for="ld-y">y:</label><input type="number" id="ld-y"/><br/>
+                <label for="ld-z">z:</label><input type="number" id="ld-z"/><br/>
+                <label>Ambient</label><br/>
+                <label for="la-r">r:</label><input type="number" id="la-r"/><br/>
+                <label for="la-g">g:</label><input type="number" id="la-g"/><br/>
+                <label for="la-b">b:</label><input type="number" id="la-b"/><br/>
+                <label>Diffuse</label><br/>
+                <label for="ldf-r">r:</label><input type="number" id="ldf-r"/><br/>
+                <label for="ldf-g">g:</label><input type="number" id="ldf-g"/><br/>
+                <label for="ldf-b">b:</label><input type="number" id="ldf-b"/><br/>
+                <label>Specular</label><br/>
+                <label for="ls-r">r:</label><input type="number" id="ls-r"/><br/>
+                <label for="ls-g">g:</label><input type="number" id="ls-g"/><br/>
+                <label for="ls-b">b:</label><input type="number" id="ls-b"/><br/>
+            </fieldset>
+        </div>
 
         <script type="x-shader/x-vertex" id="vshader">
             attribute vec3 aPosition;
@@ -33,7 +60,8 @@
             varying vec3 vPosition;
             varying vec2 vTexCoords;
 
-            void main() {
+        void main() {
+
                 gl_Position = uProjection * uView * uModel * vec4(aPosition,1.0);
 
                 vec3 vertexPosition = vec3(uModel * vec4(aPosition,1.0));
@@ -66,17 +94,21 @@
             uniform bool uEnableAmbient;
             uniform bool uEnableDiffuse;
             uniform bool uEnableSpecular;
+            uniform bool uEnableFog;
 
             varying vec2 vTexCoords;
             varying vec3 vNormal;
             varying vec3 vPosition;
             void main() {
-
                 vec3 ambientColor = vec3(0.0,0.0,0.0);
                 vec3 diffuseColor = vec3(0.0,0.0,0.0);
                 vec3 specularColor = vec3(0.0,0.0,0.0);
 
                 vec3 normalized_aNormal = normalize(vNormal);
+                if(!gl_FrontFacing){
+                    float i = -1.0;
+                    normalized_aNormal = normalized_aNormal * i;
+                }
 
                 vec3 normalized_uLightDirection = normalize(uLightDirection);
                 vec3 eyeDirection = uEyePosition - vPosition;
@@ -102,8 +134,24 @@
                     //specularColor = vec3(1.0,1.0,1.0) * specularCoefficient;
                 }
 
-                vec4 texColor0 = texture2D(uSampler0, vTexCoords);
-                vec4 finalColor = vec4(texColor0.rgb * ( ambientColor + diffuseColor + specularColor ),texColor0.a);
+                vec4 texColor;
+                vec4 finalColor;
+
+                if(uEnableFog){
+                    float perspective_far = 20000.0;
+                    float fogCoord  = (gl_FragCoord.z / gl_FragCoord.w) / perspective_far;
+                    float fogDensity = 50.0;
+                    float fog = fogCoord * fogDensity;
+                    vec4 fogColor = vec4(1,1,1,0);
+
+                    texColor = texture2D(uSampler0, vTexCoords);
+                    vec4 almostFinalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                    finalColor = mix(fogColor, almostFinalColor, clamp(1.0-fog,0.0,1.0) );
+                }else{
+                    texColor = texture2D(uSampler0, vTexCoords);
+                    finalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                }
+
                 gl_FragColor = finalColor;
             }
         </script>
