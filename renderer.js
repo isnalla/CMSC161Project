@@ -1,24 +1,30 @@
-document.body.onload = main;
+/*
+
+    References : http://www.geeks3d.com/20100228/fog-in-glsl-webgl/
+                 http://threejs.org/examples/webgl_geometry_minecraft.html
+ */
+document.body.onload = webGLStart;
 
 globalGL = null;
-function main(){
+function webGLStart(){
     var canvas; //canvas element
     var vertexShader,fragmentShader;
     var program;
     var gl;
+//vertex attributes
     var ext;
     //vertex attributes
     var aPosition; //webGL position vertex attribute
     var aNormal;    //webGL normal vertex attribute
     var aTexCoords;
-    //uniforms
+//uniforms
     var uModel;     //webGL model uniform
     var uNormal;     //webGL normal uniform
     var uView;
     var uProjection;
+    var uEnableAmbient,uEnableDiffuse, uEnableSpecular, uEyePosition, uEnableFog; //webGL light property variables
+    var enableAmbient, enableDiffuse, enableSpecular, enableFog;
     var uSampler0;
-    var uSampler1;
-    var uEnableAmbient,uEnableDiffuse, uEnableSpecular, uEyePosition; //webGL light property variables
     var uLightDirection, uLightAmbient, uLightDiffuse, uLightSpecular ;    //webGL material property variables
     var uMaterialAmbient, uMaterialDiffuse, uMaterialSpecular, uShininess ;
     var viewMatrix, projectionMatrix;
@@ -26,8 +32,8 @@ function main(){
 
     var IMAGE_SOURCES_ARRAY;    //array containing name and file path for image sources
     var imagesArray;            //array containing image elements
-    var freeCamera,fpCamera,currentCamera,mouse;
-
+    var freeCamera,fpCamera,currentCamera,currentLighting,defaultLighting,mouse;
+    var freeze;
     initializeWebGLVariables(); //initialize variables declared above
 
     //Box(w,l,d,[material],wm,lm,dm)  material = material properties and texture
@@ -68,6 +74,7 @@ function main(){
     var step = new Box(2,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1,[Materials.BLACK_WHITE],1,1,1);
 
+
     animate();
 
 	function animate(){
@@ -89,6 +96,8 @@ function main(){
 	}
     function drawScene(){
 //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
+
+
         //floors
         drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
         drawObject(_vcorridor,[1,0,-6],90,0);
@@ -188,28 +197,26 @@ function main(){
 
     /* --- Lighting Settings --- */
     function setLighting(){
-        var enableAmbient = true;
-        var enableDiffuse = true;
-        var enableSpecular = true;
         //light direction
-        var ld = {x: -1.0,y: -1.0,z: -1.0};     //light direction
-        var ls = {r: 1.0,g: 1.0,b: 1.0};        //light specular color
-        var ldf = {r: 1.0, g: 1.0, b: 1.0};        //light diffuse
-        var amb = { r: 1.0, g: 1.0, b: 1.0};        //ambient light color
-
+        var ld = currentLighting.lightDirection;
+        var ls = currentLighting.lightSpecular;
+        var ldf = currentLighting.lightDiffuse;     //light diffuse
+        var amb = currentLighting.lightAmbient;
         gl.uniform1i(uEnableAmbient,enableAmbient);
         gl.uniform1i(uEnableDiffuse,enableDiffuse);
         gl.uniform1i(uEnableSpecular,enableSpecular);
-        gl.uniform3f(uLightSpecular,ls.r,ls.g,ls.b);  //COLOR OF SPECULAR LIGHT
+        gl.uniform1i(uEnableFog,enableFog);
+
         gl.uniform3f(uLightDirection,ld.x,ld.y,ld.z);
+        gl.uniform3f(uLightSpecular,ls.r,ls.g,ls.b);  //COLOR OF SPECULAR LIGHT
         gl.uniform3f(uLightDiffuse,ldf.r,ldf.g,ldf.b);
         gl.uniform3f(uLightAmbient,amb.r,amb.g,amb.b); //NATURAL LIGHT COLOR
+        //eye  position for specular calculation
+        var eyepos = currentCamera.eye;
+        gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
     }
 /* ------------------------- */
 
-    function hasCollision(){
-        return false;
-    }
     /* --- Camera Settings --- */
     function setCamera(){
         //eye = point where the eye is
@@ -218,35 +225,37 @@ function main(){
         var center = currentCamera.center;   //Point where the eye will look at
         var up = currentCamera.up;       //Camera up vector
 
-        currentCamera.theta = currentCamera.theta + mouse.dx;
-        currentCamera.phi = currentCamera.phi + mouse.dy;
-        if(currentCamera.theta > 360 || currentCamera.theta < -360) currentCamera.theta = 0;
-        if(currentCamera.phi < 0) currentCamera.phi = 0;
-        if(currentCamera.phi > 180) currentCamera.phi = 180;
-        center.x = eye.x - 100*cosDegree(currentCamera.theta);
-        center.y = eye.y - 100*cosDegree( currentCamera.phi );
-        center.z = eye.z - 100*sinDegree(currentCamera.theta);
-        if(!hasCollision()){
-            var tunedSpeed = 0.1*currentCamera.moveSpeed;
-            if(currentCamera.moveForward){
-                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta);
-                if(currentCamera.upMovable)
-                    eye.y = eye.y - tunedSpeed*cosDegree( currentCamera.phi );
-                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta);
-            }
-            if(currentCamera.moveBackward){
-                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 180);
-                if(currentCamera.upMovable)
-                    eye.y = eye.y - tunedSpeed*cosDegree(currentCamera.phi - 180);
-                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 180);
-            }
-            if(currentCamera.moveLeft){
-                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 90);
-                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 90);
-            }
-            if(currentCamera.moveRight){
-                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta + 90);
-                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta + 90);
+        if(!freeze){
+            currentCamera.theta = currentCamera.theta + mouse.dx;
+            currentCamera.phi = currentCamera.phi + mouse.dy;
+            if(currentCamera.theta > 360 || currentCamera.theta < -360) currentCamera.theta = 0;
+            if(currentCamera.phi < 0) currentCamera.phi = 0;
+            if(currentCamera.phi > 180) currentCamera.phi = 180;
+            center.x = eye.x - 100*cosDegree(currentCamera.theta);
+            center.y = eye.y - 100*cosDegree( currentCamera.phi );
+            center.z = eye.z - 100*sinDegree(currentCamera.theta);
+            if(!hasCollision()){
+                var tunedSpeed = 0.1*currentCamera.moveSpeed;
+                if(currentCamera.moveForward){
+                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta);
+                    if(currentCamera.upMovable)
+                        eye.y = eye.y - tunedSpeed*cosDegree( currentCamera.phi );
+                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta);
+                }
+                if(currentCamera.moveBackward){
+                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 180);
+                    if(currentCamera.upMovable)
+                        eye.y = eye.y - tunedSpeed*cosDegree(currentCamera.phi - 180);
+                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 180);
+                }
+                if(currentCamera.moveLeft){
+                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 90);
+                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 90);
+                }
+                if(currentCamera.moveRight){
+                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta + 90);
+                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta + 90);
+                }
             }
         }
 
@@ -264,9 +273,7 @@ function main(){
         mat4.perspective(projectionMatrix,glMatrix.toRadian(perspectiveDegrees),aspect,near,far);
         gl.uniformMatrix4fv(uProjection,false,projectionMatrix);
 
-        //i dunno wth is this
-        var eyepos = currentCamera.eyepos;
-        gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
+
     }
     /* ----------------------- */
 
@@ -373,53 +380,13 @@ function main(){
              mouse.y = event.clientY;
          };
 
-         document.body.onkeyup = function(event){
-             event = event || window.event;
-             var keycode = event.charCode || event.keyCode;
-             switch( keycode ) {
-                 case 87: /*W*/ currentCamera.moveForward = false; break;
-                 case 65: /*A*/ currentCamera.moveLeft = false; break;
-                 case 83: /*S*/ currentCamera.moveBackward = false; break;
-                 case 68: /*D*/ currentCamera.moveRight = false; break;
-             }
-         };
-
-         document.body.onkeydown = function(event){
-             event = event || window.event;
-             var keycode = event.charCode || event.keyCode;
-
-             switch ( keycode ) {
-                 case 87: /*W*/ currentCamera.moveForward = true; break;
-
-                 case 65: /*A*/ currentCamera.moveLeft = true; break;
-
-                 case 83: /*S*/ currentCamera.moveBackward = true; break;
-
-                 case 68: /*D*/ currentCamera.moveRight = true; break;
-                 /*V*/
-                 case 86: if(currentCamera == fpCamera) currentCamera = freeCamera;
-                            else currentCamera = fpCamera;
-                     break;
-             }
-
-         };
-
-         canvas.onclick = function(event){
-             mouse.x = event.clientX;
-             mouse.y = event.clientY;
-         };
-         canvas.onmousemove = function(event){
-             var screenCenter = {
-                 x: screen.width/2,
-                 y: screen.height/2
-             };
-
-             mouse.dx = (event.clientX - screenCenter.x)*mouse.sensitivity/1000;
-             mouse.dy = (screenCenter.y - event.clientY)*mouse.sensitivity/1000;
-
-
-         };
          MOUSE_SENSITIVITY = 3;
+
+         enableAmbient = true;
+         enableDiffuse = true;
+         enableSpecular = true;
+         enableFog = true;
+
          mouse = {
              x: 0,
              y: 0,
@@ -427,12 +394,13 @@ function main(){
              dy: 0,
              sensitivity : 3
          };
+         initListeners(mouse);
 
          var cameraSettings = {
              eye : {
-                 x:0,
-                 y:10,
-                 z:60,
+                 x:80,
+                 y:80,
+                 z:80,
                  direction : null
              },
              center : {
@@ -440,8 +408,8 @@ function main(){
                  y: 0,
                  z: 0
              },
-             theta: 90, //in degrees
-             phi: 90,
+             theta: 45, //in degrees
+             phi: 45,
              up : {
                  x: 0,
                  y: 1,
@@ -460,7 +428,21 @@ function main(){
          cameraSettings.moveSpeed = 1;
          fpCamera = new Camera(cameraSettings);
          currentCamera = freeCamera;
-         globalGL = initializeWebGL(canvas);
+
+
+         var lightSettings = {
+            lightDirection : {x: -1.0,y: -1.0,z: -1.0},     //light direction
+            lightSpecular : {r: 1.0,g: 1.0,b: 1.0},     //light specular color
+            lightDiffuse : {r: 1.0, g: 1.0, b: 1.0},        //light diffuse
+            lightAmbient : { r: 0.5, g: 0.5, b: 0.5}        //ambient light color
+         };
+         defaultLighting = new Lighting(lightSettings);
+         currentLighting = defaultLighting;
+
+        initInputs(currentLighting);
+
+
+        globalGL = initializeWebGL(canvas);
          gl = globalGL;
          ext = (
            gl.getExtension('EXT_texture_filter_anisotropic') ||
@@ -481,7 +463,6 @@ function main(){
          uProjection = gl.getUniformLocation(program,"uProjection"); // projectionMatrix attr
          aTexCoords = gl.getAttribLocation(program,"aTexCoords");    //texture Mapping Buffer attr
          uSampler0 = gl.getUniformLocation(program, 'uSampler0');      //texture Sampler attr (picker)
-         uSampler1 = gl.getUniformLocation(program, 'uSampler1');      //texture Sampler attr (picker)
          gl.enableVertexAttribArray(aPosition);
          gl.enableVertexAttribArray(aNormal);
          gl.enableVertexAttribArray(aTexCoords);
@@ -499,7 +480,7 @@ function main(){
          uEnableAmbient = gl.getUniformLocation(program,"uEnableAmbient");
          uEnableDiffuse = gl.getUniformLocation(program,"uEnableDiffuse");
          uEnableSpecular = gl.getUniformLocation(program,"uEnableSpecular");
-
+         uEnableFog = gl.getUniformLocation(program,"uEnableFog");
          /********** INIT MATRIX VARIABLES ******************/
          viewMatrix = mat4.create();
          projectionMatrix = mat4.create();
@@ -521,7 +502,6 @@ function main(){
              gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
              gl.uniform1f(uShininess,1.0);
          };
-
 
          Materials.RED_STONE = function (){
              gl.uniform1i(uSampler0, 2);
@@ -613,11 +593,173 @@ function main(){
             image.src = IMAGE_SOURCES_ARRAY[ii].src;
             imagesArray[IMAGE_SOURCES_ARRAY[ii].name] = image;
          }
+     }
+
+    function toggleLight(){
+         if(enableAmbient && enableDiffuse && enableSpecular){
+             enableAmbient = false;
+             enableDiffuse = false;
+             enableSpecular = false;
+         }else if(!enableAmbient){
+             enableAmbient = true;
+         }else if(!enableDiffuse){
+             enableDiffuse = true;
+         }else if(!enableSpecular){
+             enableSpecular = true;
+         }
+     }
+    function initListeners(mouse){
+        canvas.onmouseenter = function(event){
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        };
+
+        canvas.onmousewheel = function(event){
+            if(event.wheelDelta < 0)
+                currentCamera.near -= 1;
+            else currentCamera.near += 1;
+        };
+
+
+        canvas.onkeyup = function(event){
+            event = event || window.event;
+            var keycode = event.charCode || event.keyCode;
+            switch( keycode ) {
+                case 87: /*W*/ currentCamera.moveForward = false; break;
+                case 65: /*A*/ currentCamera.moveLeft = false; break;
+                case 83: /*S*/ currentCamera.moveBackward = false; break;
+                case 68: /*D*/ currentCamera.moveRight = false; break;
+            }
+        };
+        canvas.onkeydown = function(event){
+            event = event || window.event;
+            var keycode = event.charCode || event.keyCode;
+            switch ( keycode ) {
+                case 87: /*W*/ currentCamera.moveForward = true; break;
+                case 65: /*A*/ currentCamera.moveLeft = true; break;
+                case 83: /*S*/ currentCamera.moveBackward = true; break;
+                case 68: /*D*/ currentCamera.moveRight = true; break;
+                case 76: /*L - light switch*/ toggleLight(); break;
+                case 70: /*F - freeze*/ freeze = !freeze; break;
+                case 71: /*G - fog*/ enableFog = !enableFog; break;
+                case 86: /*V - change camera*/ if(currentCamera == fpCamera) currentCamera = freeCamera;
+                    else currentCamera = fpCamera;
+                        break;
+            }
+
+        };
+
+        canvas.onclick = function(event){
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        };
+        canvas.onmousemove = function(event){
+            var canvasCenter = {
+                x: canvas.width/2,
+                y: canvas.height/2
+            };
+            mouse.dx = (event.clientX - canvasCenter.x)*mouse.sensitivity/1000;
+            mouse.dy = (canvasCenter.y - event.clientY)*mouse.sensitivity/1000;
+
+        };
+
+
+        document.getElementById('ld-x').onkeyup = function(){
+            currentLighting.lightDirection.x = parseFloat(this.value);
+        };
+        document.getElementById('ld-y').onkeyup = function(){
+            currentLighting.lightDirection.y = parseFloat(this.value);
+        };
+        document.getElementById('ld-z').onkeyup = function(){
+            currentLighting.lightDirection.z = parseFloat(this.value);
+        };
+
+        document.getElementById('la-r').onkeyup = function(){
+            currentLighting.lightAmbient.r = parseFloat(this.value);
+            console.log(currentLighting);
+
+        };
+        document.getElementById('la-g').onkeyup = function(){
+            currentLighting.lightAmbient.g = parseFloat(this.value);
+
+        };
+        document.getElementById('la-b').onkeyup = function(){
+            currentLighting.lightAmbient.b = parseFloat(this.value);
+
+        };
+
+        document.getElementById('ldf-r').onkeyup = function(){
+            currentLighting.lightDiffuse.r = parseFloat(this.value);
+
+        };
+        document.getElementById('ldf-g').onkeyup = function(){
+            currentLighting.lightDiffuse.g = parseFloat(this.value);
+
+        };
+        document.getElementById('ldf-b').onkeyup = function(){
+            currentLighting.lightDiffuse.b = parseFloat(this.value);
+
+        };
+
+        document.getElementById('ls-r').onkeyup = function(){
+            currentLighting.lightSpecular.r = parseFloat(this.value);
+
+        };
+        document.getElementById('ls-g').onkeyup = function(){
+            currentLighting.lightSpecular.g = parseFloat(this.value);
+
+        };
+        document.getElementById('ls-b').onkeyup = function(){
+            currentLighting.lightSpecular.b = parseFloat(this.value);
+        };
+
     }
+
+
+    function initInputs(){
+        //light direction
+        document.getElementById('ld-x').value = currentLighting.lightDirection.x;
+        document.getElementById('ld-y').value = currentLighting.lightDirection.y;
+        document.getElementById('ld-z').value = currentLighting.lightDirection.z;
+
+        document.getElementById('la-r').value = currentLighting.lightAmbient.r;
+        document.getElementById('la-g').value = currentLighting.lightAmbient.g;
+        document.getElementById('la-b').value = currentLighting.lightAmbient.b;
+
+        document.getElementById('ldf-r').value = currentLighting.lightDiffuse.r;
+        document.getElementById('ldf-g').value = currentLighting.lightDiffuse.g;
+        document.getElementById('ldf-b').value = currentLighting.lightDiffuse.b;
+
+        document.getElementById('ls-r').value = currentLighting.lightSpecular.r;
+        document.getElementById('ls-g').value = currentLighting.lightSpecular.g;
+        document.getElementById('ls-b').value = currentLighting.lightSpecular.b;
+
+    }
+
+    canvas.focus();
 }
 /**
   *************************** END MAIN *****************************************
  */
+
+
+function hasCollision(){
+    return false;
+}
+
+function cosDegree(degree){
+    return Math.cos(glMatrix.toRadian(degree));
+}
+function sinDegree(degree){
+    return Math.sin(glMatrix.toRadian(degree));
+}
+
+function Lighting(lightSettings){
+    this.lightDirection = lightSettings.lightDirection;
+    this.lightSpecular = lightSettings.lightSpecular ; //light specular color
+    this.lightDiffuse = lightSettings.lightDiffuse;      //light diffuse
+    this.lightAmbient = lightSettings.lightAmbient;   //ambient light color
+}
 /* Camera settings, not yet implemented */
 function Camera(cameraSettings){
     this.eye = cameraSettings.eye;
@@ -643,15 +785,14 @@ function Camera(cameraSettings){
  * @param l length
  * @param d depth
  * @param material wat
+ * @param wm texture modifier to scale the size of the texture to the width of the object
+ * @param lm texture modifier to scale the size of the texture to the length of the object
+ * @param dm texture modifier to scale the size of the texture to the depth of the object
  */
 function Box(w,l,d,material,wm,lm,dm){
-    this.position = [0,0,0];
-    this.rotationX = 0;
-    this.rotationY = 0;
     this.width = w;
     this.length = l;
     this.height = d;
-    this.material = Array();
     this.vertices = [   // Coordinates
         // Front face
         -w, -l,  d,
@@ -690,41 +831,35 @@ function Box(w,l,d,material,wm,lm,dm){
         -w,  l, -d
     ];
     this.normals = [   // Coorlinates
-        // Front face
-        -w, -l,  d,
-        w, -l,  d,
-        w,  l,  d,
-        -w,  l,  d,
+        -1,-1,1,//front
+        1,-1,1,
+        1,1,1,
+        -1,1,1,
 
-        // Back face
-        -w, -l, -d,
-        -w,  l, -d,
-        w,  l, -d,
-        w, -l, -d,
+        -1,-1,-1,//Back
+        -1,1,-1,
+        1,1,-1,
+        1,-1,-1,
 
-        // Top face
-        -w,  l, -d,
-        -w,  l,  d,
-        w,  l,  d,
-        w,  l, -d,
+        -1,1,-1,//top
+        -1,1,1,
+        1,1,1,
+        1,1,-1,
 
-        // Bottom face
-        -w, -l, -d,
-        w, -l, -d,
-        w, -l,  d,
-        -w, -l,  d,
+        -1,-1,-1,//bottom
+        1,-1,-1,
+        1,-1,1,
+        -1,-1,1,
 
-        // Right face
-        w, -l, -d,
-        w,  l, -d,
-        w,  l,  d,
-        w, -l,  d,
+        1,-1,-1,//right
+        1,1,-1,
+        1,1,1,
+        1,-1,1,
 
-        // Left face
-        -w, -l, -d,
-        -w, -l,  d,
-        -w,  l,  d,
-        -w,  l, -d
+        -1,-1,-1,//left
+        -1,-1,1,
+        -1,1,1,
+        -1,1,-1
     ];
     this.texCoords = [   // Coorlinates
         // Front
@@ -761,6 +896,7 @@ function Box(w,l,d,material,wm,lm,dm){
     ];
 
     jj = material.length;
+    this.material = [];
     if(material.length == 1)
         for(iii = 0; iii < 6; iii++)
             this.material[iii] = material[0];
@@ -772,8 +908,8 @@ function Box(w,l,d,material,wm,lm,dm){
         }
 
     this.initBuffers();
-}
 
+}
 Box.prototype.initBuffers = function(){
     var gl = globalGL;
 
@@ -803,10 +939,3 @@ Box.prototype.indices = [
     16, 17, 18,     16, 18, 19,   // right
     20, 21, 22,     20, 22, 23    // left
 ];
-
-function cosDegree(degree){
-    return Math.cos(glMatrix.toRadian(degree));
-}
-function sinDegree(degree){
-    return Math.sin(glMatrix.toRadian(degree));
-}
