@@ -896,7 +896,7 @@ function Box(w,l,d,material,wm,lm,dm){
     ];
 
     jj = material.length;
-    this.material = new Array();
+    this.material = [];
     if(material.length == 1)
         for(iii = 0; iii < 6; iii++)
             this.material[iii] = material[0];
