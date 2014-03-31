@@ -592,7 +592,7 @@ function main(){
              {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
              {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
              {name:'red-stone-tile',src:'textures/red-stone-tile.png'},
-             {name:'vinyl-tile',src:'textures/vinyl-tile.png'},
+             {name:'vinyl-tile',src:'textures/wall-rough-lblue.png'},
              {name:'door',src:'textures/door2.png'},
              {name:'men',src:'textures/mcr.png'},
              {name:'women',src:'textures/wcr.png'},
