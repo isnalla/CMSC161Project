@@ -1,3 +1,7 @@
+2/4/2014
+    - changed parameters of drawObject(model,position,rotationX,rotationY) -> drawObject(model)
+    - added Box.prototype.addOrientation(position,rotationX,rotationY)
+
 1/4/2014
     - merged with natsi
     - installed doors
