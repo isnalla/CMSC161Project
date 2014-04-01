@@ -1,3 +1,15 @@
+1/4/2014
+    - merged with natsi
+    - installed doors
+    - added collision manager class (wip)
+
+31/3/2014
+    - merged with kim
+    - new features: fog
+              changeable light parameters
+              F key : freeze camera view
+     -stripped unnecessary variables
+
 30/3/2014
     - revised drawing of objects (box type objects)
         *now the drawObject draws the object per side and not as a whole for texture reasons
