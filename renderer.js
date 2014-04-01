@@ -78,7 +78,9 @@ function webGLStart(){
     var step = new Box(2,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1,[Materials.BLACK_WHITE],1,1,1);
 
-    console.log(objectListInQuadrant);
+    setFixedPositions();
+
+//    console.log(objectListInQuadrant);
     animate();
 
 	function animate(){
@@ -98,118 +100,175 @@ function webGLStart(){
 
 	    requestAnimFrame(animate);
 	}
-    function drawScene(){
-//drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
+    function setFixedPositions(){
         //floors
-        drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
-        drawObject(_vcorridor,[1,-0.005,-6],90,0);
-        drawObject(_vcorridor,[1,0,-28],90,0);
-        drawObject(_vcorridor,[1,0,28.25],90,0);
-        drawObject(_hcorridor,[23.625,0,0],90,0);   //horizontal corridors
-        drawObject(_5x9floor,[-4.25,0,17],90,0);    //5x9 floors
-        drawObject(_5x9floor,[5.75,0,17],90,0);
-        drawObject(_5x9floor,[15.75,0,17],90,0);
-        drawObject(_5x9floor,[5.75,0,-17],90,0);
-        drawObject(_5x9floor,[-4.25,0,-17],90,0);
-        drawObject(_5x9floor,[-14.25,0,-17],90,0);
-        drawObject(_5x6floor,[15.75,0,-20],90,0);   //board room floor
-        drawObject(_lkfloor,[-14.25,0,17],90,0);    //lounge & kitchen floor
-        drawObject(_5x5floor,[16,0,-9],90,0);       //patio
-        drawObject(_wcrfloor,[-22,0.005,22],90,0);      //women's cr floor
-        drawObject(_mcrfloor,[-22,0.005,-22],90,0);     //men's cr floor
-        drawObject(_2x10floor,[-25,0,-20.25],90,0); //floors around front stairs
-        drawObject(_2x12floor,[-25,0,18.375],90,0);
-        drawObject(_2x30floor,[-21.125,0,0],90,0);
-        drawObject(_2x30floor,[-28.875,0,0],90,0);
+        //box.addOrientation(position [,rotationX [,rotationY]]) rotation optional
+        _vcorridor.addOrientation([1,0,6], 90, 0);
+        _vcorridor.addOrientation([1,-0.005,-6], 90, 0);
+        _vcorridor.addOrientation([1,0,-28], 90, 0);
+        _vcorridor.addOrientation([1,0,28.25], 90, 0);
+
+        _hcorridor.addOrientation([23.625,0,0], 90, 0);
+
+        _5x9floor.addOrientation([-4.25,0,17], 90, 0);
+        _5x9floor.addOrientation([5.75,0,17], 90, 0);
+        _5x9floor.addOrientation([15.75,0,17], 90, 0);
+        _5x9floor.addOrientation([5.75,0,-17], 90, 0);
+        _5x9floor.addOrientation([-4.25,0,-17], 90, 0);
+        _5x9floor.addOrientation([-14.25,0,-17], 90, 0);
+
+        _5x6floor.addOrientation([15.75,0,-20], 90, 0);
+        _lkfloor.addOrientation([-14.25,0,17], 90, 0);
+        _5x5floor.addOrientation([16,0,-9], 90, 0);
+        _wcrfloor.addOrientation([-22,0.005,22], 90, 0);
+        _mcrfloor.addOrientation([-22,0.005,-22], 90, 0);
+        _2x10floor.addOrientation([-25,0,-20.25], 90, 0);
+
+        _2x12floor.addOrientation([-25,0,18.375], 90, 0);
+        _2x30floor.addOrientation([-21.125,0,0], 90, 0);
+        _2x30floor.addOrientation([-28.875,0,0], 90, 0);
+
+        _2x30floor.addOrientation([-28.875,0,0], 90, 0);
+        _2x30floor.addOrientation([-28.875,0,0], 90, 0);
+
         //outer walls
-        drawObject(swallBox,[-2.25,0,30.5],0,0);
-        drawObject(lwallBox,[-30.5,0,0],0,90);
-        drawObject(lwallBox,[26.0,0,0],0,90);
-        drawObject(swallBox,[-2.25,0,-30.5],0,0);
+        swallBox.addOrientation([-2.25,0,30.5]);
+        swallBox.addOrientation([-2.25,0,-30.5]);
+        lwallBox.addOrientation([26.0,0,0], 0, 90);
+        lwallBox.addOrientation([-30.5,0,0], 0, 90);
+
         //right rooms border walls
-        drawObject(_1mBox,[20,0,8],0,0);
-        drawObject(_8mBox,[-19,0,22],0,90);
-        drawObject(_9mBox,[21,0,17],0,90);
-        drawObject(_17mBox,[-2,0,8],0,0);
-        drawObject(_20mBox,[1,0,26],0,0);
-        //top right 5m x 9m lab lower wall
-        drawObject(_3mBox,[11,0,11],0,90);
-        drawObject(_4mBox,[11,0,22],0,90);
-        //middle right 5m x 9m lab lower wall
-        drawObject(_3mBox,[1,0,11],0,90);
-        drawObject(_4mBox,[1,0,22],0,90);
-        //lower right 5m x 9m lab lower wall
-        drawObject(_3mBox,[-9,0,23],0,90);
-        drawObject(_4mBox,[-9,0,12],0,90);
-        //kitchen corner - left wall
-        drawObject(_3mBox,[-11.5,0,20],0,0);
-        //walls on void
-        drawObject(_4m2Box,[21,0,0],0,90);
-        drawObject(_10mBox,[-19,0,0],0,90);
-        drawObject(_20mBox,[1,0,4],0,0);
-        drawObject(_20mBox,[1,0,-4],0,0);
-        //left rooms border walls
-        drawObject(_6mBox,[21,0,-20],0,90);
-        drawObject(_8mBox,[-19,0,-22],0,90);
-        drawObject(_13mBox,[-6,0,-8],0,0);
-        drawObject(_20mBox,[1,0,-26],0,0);
+        _8mBox.addOrientation([-19,0,22], 0, 90);
+        _9mBox.addOrientation([21,0,17], 0, 90);
+        _17mBox.addOrientation([-2,0,8]);
+        _20mBox.addOrientation([1,0,26]);
+
+        _3mBox.addOrientation([11,0,11], 0, 90);
+        _4mBox.addOrientation([11,0,22], 0, 90);
+
+        _3mBox.addOrientation([1,0,11], 0, 90);
+        _4mBox.addOrientation([1,0,22], 0, 90);
+
+        //kitchen
+        _3mBox.addOrientation([-9,0,23], 0, 90);
+        _4mBox.addOrientation([-9,0,12], 0, 90);
+        _3mBox.addOrientation([-11.5,0,20], 0, 0);
+
+        //void walls
+        _4m2Box.addOrientation([21,0,0], 0, 90);
+        _10mBox.addOrientation([-19,0,0], 0, 90);
+        _20mBox.addOrientation([1,0,4]);
+        _20mBox.addOrientation([1,0,-4]);
+
+        //left room walls
+        _6mBox.addOrientation([21,0,-20], 0, 90);
+        _8mBox.addOrientation([-19,0,-22],0,90);
+        _13mBox.addOrientation([-6,0,-8]);
+        _20mBox.addOrientation([1,0,-26]);
+
         //board room right walls
-        drawObject(_1mBox,[20,0,-14],0,0);
-        drawObject(_2mBox,[13,0,-14],0,0);
+        _1mBox.addOrientation([20,0,-14]);
+        _2mBox.addOrientation([13,0,-14]);
         //top left 5m x 9m lab upper wall
-        drawObject(_3mBox,[11,0,-23],0,90);
-        drawObject(_4mBox,[11,0,-12],0,90);
+        _3mBox.addOrientation([11,0,-23], 0, 90);
+        _4mBox.addOrientation([11,0,-12], 0, 90);
         //middle left 5m x 9m lab upper wall
-        drawObject(_3mBox,[1,0,-11],0,90);
-        drawObject(_4mBox,[1,0,-22],0,90);
+        _3mBox.addOrientation([1,0,-11], 0, 90);
+        _4mBox.addOrientation([1,0,-22], 0, 90);
         //lower left 5m x 9m lab upper wall
-        drawObject(_3mBox,[-9,0,-11],0,90);
-        drawObject(_4mBox,[-9,0,-22],0,90);
+        _3mBox.addOrientation([-9,0,-11], 0, 90);
+        _4mBox.addOrientation([-9,0,-22], 0, 90);
         //women's comfort room
-        drawObject(_1mBox,[-24,0,16],0,0);
-        drawObject(_3mBox,[-22,0,28],0,0);
-        drawObject(_6mBox,[-25,0,22],0,90);
+        _1mBox.addOrientation([-24,0,16]);
+        _3mBox.addOrientation([-22,0,28]);
+        _6mBox.addOrientation([-25,0,22], 0, 90);
         //men's comfort room
-        drawObject(_1mBox,[-24,0,-16],0,0);
-        drawObject(_3mBox,[-22,0,-28],0,0);
-        drawObject(_6mBox,[-25,0,-22],0,90);
-        //stairs(entrance)
-        drawObject(_2mBox,[-25,0,-10],0,0);
-        drawObject(_8mBox,[-27,0,-2],0,90);
-        drawObject(_8mBox,[-23,0,-2],0,90);
-        //stairs(exit)
-        drawObject(_2mBox,[28,0,4],0,0);
-        drawObject(_2mBox,[28,0,-6],0,0);
-        drawObject(_5mBox,[29.5,0,-1],0,90);
+        _1mBox.addOrientation([-24,0,-16]);
+        _3mBox.addOrientation([-22,0,-28]);
+        _6mBox.addOrientation([-25,0,-22], 0, 90);
+
+
         //doors(right) entrance to emergency
-        drawObject(woodendoor,[-18,2,9.4],0,45);
-        drawObject(woodendoor,[-18,2,14.5],0,-45);
-        drawObject(woodendoor,[-8,2,15.1],0,45);
-        drawObject(woodendoor,[-8,2,20.4],0,-45);
-        drawObject(woodendoor,[2,2,13.1],0,45);
-        drawObject(woodendoor,[2,2,18.9],0,-45);
-        drawObject(woodendoor,[12,2,13.1],0,45);
-        drawObject(woodendoor,[12,2,18.9],0,-45);
+        woodendoor.addOrientation([-18,2,9.4], 0, 45);
+        woodendoor.addOrientation([-18,2,14.5], 0, -45);
+        woodendoor.addOrientation([-8,2,15.1], 0, 45);
+        woodendoor.addOrientation([-8,2,20.4], 0, -45);
+        woodendoor.addOrientation([2,2,13.1], 0, 45);
+        woodendoor.addOrientation([2,2,18.9], 0, -45);
+        woodendoor.addOrientation([12,2,13.1], 0, 45);
+        woodendoor.addOrientation([12,2,18.9], 0, -45);
         //doors(left) entrance to emergency
-        drawObject(woodendoor,[-18,2,-9.3],0,-45);
-        drawObject(woodendoor,[-18,2,-14.4],0,45);
-        drawObject(woodendoor,[-8,2,-13.1],0,-45);
-        drawObject(woodendoor,[-8,2,-18.9],0,45);
-        drawObject(woodendoor,[2,2,-13.1],0,-45);
-        drawObject(woodendoor,[2,2,-18.9],0,45);
-        drawObject(woodendoor,[12,2,-15.1],0,-45);
-        drawObject(woodendoor,[12,2,-20.9],0,45);
+        woodendoor.addOrientation([-18,2,-9.3], 0, -45);
+        woodendoor.addOrientation([-18,2,-14.4], 0, 45);
+        woodendoor.addOrientation([-8,2,-13.1], 0, -45);
+        woodendoor.addOrientation([-8,2,-18.9], 0, 45);
+        woodendoor.addOrientation([2,2,-13.1], 0, -45);
+        woodendoor.addOrientation([2,2,-18.9], 0, 45);
+        woodendoor.addOrientation([12,2,-15.1], 0, -45);
+        woodendoor.addOrientation([12,2,-20.9], 0, 45);
+
+        //doors cr
+        woodendoor.addOrientation([-20.25,2,-15.9]);
+        woodendoor.addOrientation([-20.25,2,15.9]);
+
+        //stairs walls(entrance)
+        _2mBox.addOrientation([-25,0,-10]);
+        _8mBox.addOrientation([-27,0,-2],0,90);
+        _8mBox.addOrientation([-23,0,-2],0,90);
+        //stairs
+        for(kkk = 0; kkk<9; kkk++)
+            step.addOrientation([-25,-0.25-kkk*0.5,5-kkk]);
+
+        //stair walls (emergency)
+        _2mBox.addOrientation([28,0,4]);
+        _2mBox.addOrientation([28,0,-6.01]);
+        _5mBox.addOrientation([29.5,0,-1], 0, 90);
+        //emergency walls
+        for(kkk = 0; kkk<9; kkk++)
+            emergency_step.addOrientation([27,0-kkk*0.4,3.2-kkk]);
+
+        for(kkk = 0; kkk<9; kkk++)
+            emergency_step.addOrientation([28.6,-3.5-kkk*0.4,-4.8+kkk]);
+
+    }
+    function drawScene(){
+        //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
+        //floors
+        drawObject(_vcorridor);    //vertical corridors
+        drawObject(_hcorridor);   //horizontal corridors
+        drawObject(_5x9floor);    //5x9 floors
+
+        drawObject(_5x6floor);   //board room floor
+        drawObject(_lkfloor);    //lounge & kitchen floor
+        drawObject(_5x5floor);       //patio
+        drawObject(_wcrfloor);      //women's cr floor
+        drawObject(_mcrfloor);     //men's cr floor
+        drawObject(_2x10floor); //floors around front stairs
+        drawObject(_2x12floor);
+        drawObject(_2x30floor);
+        //outer walls
+        drawObject(swallBox);
+        drawObject(lwallBox);
+
+        //right rooms border walls
+        drawObject(_1mBox);
+        drawObject(_8mBox);
+        drawObject(_9mBox);
+        drawObject(_17mBox);
+        drawObject(_3mBox);
+        drawObject(_4mBox);
+        drawObject(_3mBox);
+        drawObject(_4m2Box);
+        drawObject(_10mBox);
+        drawObject(_20mBox);
+        drawObject(_6mBox);
+        drawObject(_13mBox);
+        drawObject(_2mBox);
+        drawObject(_5mBox);
+        drawObject(woodendoor);
         //doors(cr)
-        drawObject(woodendoor,[-20.25,2,-16.1],0,0);
-        drawObject(woodendoor,[-10,2,-20.9],0,45);
-        for(kkk = 0; kkk<9; kkk++)
-            drawObject(step,[-25,-0.25-kkk*0.5,5-kkk],0,0);
-
-        for(kkk = 0; kkk<9; kkk++)
-            drawObject(emergency_step,[27,0-kkk*0.4,3.2-kkk],0,0);
-
-        for(kkk = 0; kkk<9; kkk++)
-            drawObject(emergency_step,[28.6,-3.5-kkk*0.4,-4.8+kkk],0,0);
+        drawObject(step);
+        drawObject(emergency_step);
     }
 
     /* --- Lighting Settings --- */
@@ -299,47 +358,48 @@ function webGLStart(){
      *
      */
 
-    function drawObject(model,position,rotationX,rotationY){
+    function drawObject(model){
         if(imagesArray['seamless-marble-tile'].ready ){
 
             //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
             //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(180+i));
             //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(i));
-            var modelMatrix = mat4.create();//reset model matrix
-            mat4.translate(modelMatrix,modelMatrix,position);
-            if(rotationX != null){
-                mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(rotationX));
-            }
-            if(rotationY != null){
-                mat4.rotateY(modelMatrix,modelMatrix, glMatrix.toRadian(rotationY));
-            }
-            gl.uniformMatrix4fv(uModel,false,modelMatrix);
-            var normalMatrix = mat4.create();
-            mat4.invert(normalMatrix,modelMatrix);
-            mat4.transpose(normalMatrix,normalMatrix);
-            gl.uniformMatrix4fv(uNormal,false,normalMatrix);
+            model.orientations.forEach(function(orientation){
+                var modelMatrix = mat4.create();//reset model matrix
+                mat4.translate(modelMatrix,modelMatrix,orientation.position);
+                if(orientation.rotationX != undefined && orientation.rotationX != null){
+                    mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(orientation.rotationX));
+                }
+                if(orientation.rotationY != undefined && orientation.rotationX != null){
+                    mat4.rotateY(modelMatrix,modelMatrix, glMatrix.toRadian(orientation.rotationY));
+                }
+                gl.uniformMatrix4fv(uModel,false,modelMatrix);
+                var normalMatrix = mat4.create();
+                mat4.invert(normalMatrix,modelMatrix);
+                mat4.transpose(normalMatrix,normalMatrix);
+                gl.uniformMatrix4fv(uNormal,false,normalMatrix);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, model.verticesBuffer);
-            gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,0,0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, model.verticesBuffer);
+                gl.vertexAttribPointer(aPosition,3,gl.FLOAT,false,0,0);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
-            gl.vertexAttribPointer(aNormal,3,gl.FLOAT,false,0,0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, model.normalBuffer);
+                gl.vertexAttribPointer(aNormal,3,gl.FLOAT,false,0,0);
 
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indexBuffer);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, model.texCoordsBuffer);
-            gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, model.texCoordsBuffer);
+                gl.vertexAttribPointer(aTexCoords,2,gl.FLOAT,false,0,0);
 
-            gl.enable(gl.CULL_FACE);
-            gl.cullFace(gl.FRONT);
-            draw(model);
+                gl.enable(gl.CULL_FACE);
+                gl.cullFace(gl.FRONT);
+                draw(model);
 
-            gl.enable(gl.CULL_FACE);
-            gl.cullFace(gl.BACK);
-            draw(model);
-            
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+                gl.enable(gl.CULL_FACE);
+                gl.cullFace(gl.BACK);
+                draw(model);
 
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+            });
         }
     }
 
@@ -402,7 +462,7 @@ function webGLStart(){
          enableAmbient = true;
          enableDiffuse = true;
          enableSpecular = true;
-         enableFog = true;
+         enableFog = false;
 
          mouse = {
              x: 0,
@@ -822,7 +882,7 @@ function Camera(cameraSettings){
  * @param dm texture modifier to scale the size of the texture to the depth of the object
  */
 function Box(w,l,d,material,wm,lm,dm){
-    this.positions = [];
+    this.orientations = [];
     this.width = w;
     this.length = l;
     this.height = d;
@@ -946,11 +1006,19 @@ function Box(w,l,d,material,wm,lm,dm){
     this.initBuffers();
 }
 
+Box.prototype.addOrientation = function(position,rotationX,rotationY){
+    this.orientations.push({
+        "position" : position,
+        "rotationX" : rotationX,
+        "rotationY" : rotationY
+    });
+};
+
 Box.prototype.updateQuadrant = function(){
     for(var i = 0; i < 4; i++){
-        console.log("quadrant "+(i));
+//        console.log("quadrant "+(i));
         if(collides({"bounds":this.bounds},{"bounds":QUADRANTS[i]})){
-            console.log("collided with quadrant "+i);
+//            console.log("collided with quadrant "+i);
             this.quadrants.push(i);
         }
     }
