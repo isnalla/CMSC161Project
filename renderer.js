@@ -1,3 +1,4 @@
+objectListInQuadrant = [[]]; //contains lists of objects with same quadrant
 /*
 
     References : http://www.geeks3d.com/20100228/fog-in-glsl-webgl/
@@ -34,6 +35,7 @@ function webGLStart(){
     var imagesArray;            //array containing image elements
     var freeCamera,fpCamera,currentCamera,currentLighting,defaultLighting,mouse;
     var freeze;
+
     initializeWebGLVariables(); //initialize variables declared above
 
     //Box(w,l,d,[material],wm,lm,dm)  material = material properties and texture
@@ -41,40 +43,42 @@ function webGLStart(){
     //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
     //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-    var lwallBox = new Box(30.75,3.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var swallBox = new Box(28,3.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var _vcorridor = new Box(20,2.25,0.0001,[Materials.SILVER_MARBLE],1,1,1);
-    var _hcorridor = new Box(2.625,30.5,0.0001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x10floor = new Box(2,10,0.0001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x12floor = new Box(2,12.375,0.0001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x30floor = new Box(1.875,30.5,0.0001,[Materials.SILVER_MARBLE],1,1,1);
-    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
-    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
-    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
-    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
-    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
-    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
+    var lwallBox = new Box(30.75,4.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
+    var swallBox = new Box(28,4.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
+    var _vcorridor = new Box(20,2.02,0.1,[Materials.SILVER_MARBLE],1,1,1);
+    var _hcorridor = new Box(2.625,30.5,0.1,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x10floor = new Box(2,10,0.1,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x12floor = new Box(2,12.375,0.1,[Materials.SILVER_MARBLE],1,1,1);
+    var _2x30floor = new Box(1.875,30.5,0.1,[Materials.SILVER_MARBLE],1,1,1);
+    var _5x9floor = new Box(5,9,0.1,[Materials.RED_STONE],1,1,1);
+    var _5x6floor = new Box(5,6,0.1,[Materials.BLACK_WHITE],1,1,1);
+    var _5x5floor = new Box(5.25,5,0.2,[Materials.DARK_YELLOW],1,1,1);
+    var _lkfloor = new Box(5,9,0.1,[Materials.BLACK_WHITE],1,1,1);
+    var _wcrfloor = new Box(3,6,0.2,[Materials.WOMEN],1,1,1);
+    var _mcrfloor = new Box(3,6,0.2,[Materials.MEN],1,1,1);
 
-    var _1mBox = new Box(0.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _2mBox = new Box(1.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _3mBox = new Box(2.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _4m2Box = new Box(4.25,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _1mBox = new Box(0.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _2mBox = new Box(1.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _3mBox = new Box(2.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _4m2Box = new Box(4.25,4.0,0.25,[Materials.VINYL],1,1,1);
 
-    var _4mBox = new Box(3.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _5mBox = new Box(4.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _6mBox = new Box(6.25,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _8mBox = new Box(8.25,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _9mBox = new Box(9.25,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _10mBox = new Box(10.0,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _13mBox = new Box(13.0,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _17mBox = new Box(16.75,3.0,0.25,[Materials.VINYL],1,1,1);
-    var _20mBox = new Box(19.75,3.0,0.25,[Materials.VINYL],1,1,1);
+    var _4mBox = new Box(3.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _5mBox = new Box(4.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _6mBox = new Box(6.25,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _8mBox = new Box(8.25,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _9mBox = new Box(9.25,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _10mBox = new Box(10.0,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _13mBox = new Box(13.0,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _17mBox = new Box(16.75,4.0,0.25,[Materials.VINYL],1,1,1);
+    var _20mBox = new Box(19.75,4.0,0.25,[Materials.VINYL],1,1,1);
+
+
 
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
     var step = new Box(2,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1,[Materials.BLACK_WHITE],1,1,1);
 
-
+    console.log(objectListInQuadrant);
     animate();
 
 	function animate(){
@@ -96,13 +100,11 @@ function webGLStart(){
 	}
     function drawScene(){
 //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
-
-
         //floors
         drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
-        drawObject(_vcorridor,[1,0,-6],90,0);
+        drawObject(_vcorridor,[1,-0.005,-6],90,0);
         drawObject(_vcorridor,[1,0,-28],90,0);
-        drawObject(_vcorridor,[1,0,28.5],90,0);
+        drawObject(_vcorridor,[1,0,28.25],90,0);
         drawObject(_hcorridor,[23.625,0,0],90,0);   //horizontal corridors
         drawObject(_5x9floor,[-4.25,0,17],90,0);    //5x9 floors
         drawObject(_5x9floor,[5.75,0,17],90,0);
@@ -113,8 +115,8 @@ function webGLStart(){
         drawObject(_5x6floor,[15.75,0,-20],90,0);   //board room floor
         drawObject(_lkfloor,[-14.25,0,17],90,0);    //lounge & kitchen floor
         drawObject(_5x5floor,[16,0,-9],90,0);       //patio
-        drawObject(_wcrfloor,[-22,0,22],90,0);      //women's cr floor
-        drawObject(_mcrfloor,[-22,0,-22],90,0);     //men's cr floor
+        drawObject(_wcrfloor,[-22,0.005,22],90,0);      //women's cr floor
+        drawObject(_mcrfloor,[-22,0.005,-22],90,0);     //men's cr floor
         drawObject(_2x10floor,[-25,0,-20.25],90,0); //floors around front stairs
         drawObject(_2x12floor,[-25,0,18.375],90,0);
         drawObject(_2x30floor,[-21.125,0,0],90,0);
@@ -179,12 +181,27 @@ function webGLStart(){
         drawObject(_2mBox,[28,0,4],0,0);
         drawObject(_2mBox,[28,0,-6],0,0);
         drawObject(_5mBox,[29.5,0,-1],0,90);
-
-        drawObject(woodendoor,[-3,10,50],0,90);
-        drawObject(woodendoor,[-1.5,10,50],0,0);
-        drawObject(woodendoor,[1.5,10,50],0,180);
-        drawObject(woodendoor,[3,10,50],0,-90);
-
+        //doors(right) entrance to emergency
+        drawObject(woodendoor,[-18,2,9.4],0,45);
+        drawObject(woodendoor,[-18,2,14.5],0,-45);
+        drawObject(woodendoor,[-8,2,15.1],0,45);
+        drawObject(woodendoor,[-8,2,20.4],0,-45);
+        drawObject(woodendoor,[2,2,13.1],0,45);
+        drawObject(woodendoor,[2,2,18.9],0,-45);
+        drawObject(woodendoor,[12,2,13.1],0,45);
+        drawObject(woodendoor,[12,2,18.9],0,-45);
+        //doors(left) entrance to emergency
+        drawObject(woodendoor,[-18,2,-9.3],0,-45);
+        drawObject(woodendoor,[-18,2,-14.4],0,45);
+        drawObject(woodendoor,[-8,2,-13.1],0,-45);
+        drawObject(woodendoor,[-8,2,-18.9],0,45);
+        drawObject(woodendoor,[2,2,-13.1],0,-45);
+        drawObject(woodendoor,[2,2,-18.9],0,45);
+        drawObject(woodendoor,[12,2,-15.1],0,-45);
+        drawObject(woodendoor,[12,2,-20.9],0,45);
+        //doors(cr)
+        drawObject(woodendoor,[-20.25,2,-16.1],0,0);
+        drawObject(woodendoor,[-10,2,-20.9],0,45);
         for(kkk = 0; kkk<9; kkk++)
             drawObject(step,[-25,-0.25-kkk*0.5,5-kkk],0,0);
 
@@ -234,29 +251,28 @@ function webGLStart(){
             center.x = eye.x - 100*cosDegree(currentCamera.theta);
             center.y = eye.y - 100*cosDegree( currentCamera.phi );
             center.z = eye.z - 100*sinDegree(currentCamera.theta);
-            if(!hasCollision()){
-                var tunedSpeed = 0.1*currentCamera.moveSpeed;
-                if(currentCamera.moveForward){
-                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta);
-                    if(currentCamera.upMovable)
-                        eye.y = eye.y - tunedSpeed*cosDegree( currentCamera.phi );
-                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta);
-                }
-                if(currentCamera.moveBackward){
-                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 180);
-                    if(currentCamera.upMovable)
-                        eye.y = eye.y - tunedSpeed*cosDegree(currentCamera.phi - 180);
-                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 180);
-                }
-                if(currentCamera.moveLeft){
-                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 90);
-                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 90);
-                }
-                if(currentCamera.moveRight){
-                    eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta + 90);
-                    eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta + 90);
-                }
+
+            var tunedSpeed = 0.1*currentCamera.moveSpeed;
+            if(currentCamera.moveForward){
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta);
+                if(currentCamera.upMovable)
+                    eye.y = eye.y - tunedSpeed*cosDegree( currentCamera.phi );
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta);
             }
+            if(currentCamera.moveBackward){
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 180);
+                if(currentCamera.upMovable)
+                    eye.y = eye.y - tunedSpeed*cosDegree(currentCamera.phi - 180);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 180);
+            }
+            if(currentCamera.moveLeft){
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta - 90);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta - 90);
+            }
+            if(currentCamera.moveRight){
+                eye.x = eye.x - tunedSpeed*cosDegree(currentCamera.theta + 90);
+                eye.z = eye.z - tunedSpeed*sinDegree(currentCamera.theta + 90);
+                }
         }
 
         mat4.lookAt(viewMatrix,
@@ -323,6 +339,7 @@ function webGLStart(){
             draw(model);
             
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
         }
     }
 
@@ -625,26 +642,47 @@ function webGLStart(){
             event = event || window.event;
             var keycode = event.charCode || event.keyCode;
             switch( keycode ) {
-                case 87: /*W*/ currentCamera.moveForward = false; break;
-                case 65: /*A*/ currentCamera.moveLeft = false; break;
-                case 83: /*S*/ currentCamera.moveBackward = false; break;
-                case 68: /*D*/ currentCamera.moveRight = false; break;
+                case 87: /*W*/
+                    currentCamera.moveForward = false; break;
+                case 65: /*A*/
+                    currentCamera.moveLeft = false; break;
+                case 83: /*S*/
+                    currentCamera.moveBackward = false; break;
+                case 68: /*D*/
+                    currentCamera.moveRight = false; break;
             }
         };
         canvas.onkeydown = function(event){
             event = event || window.event;
             var keycode = event.charCode || event.keyCode;
             switch ( keycode ) {
-                case 87: /*W*/ currentCamera.moveForward = true; break;
-                case 65: /*A*/ currentCamera.moveLeft = true; break;
-                case 83: /*S*/ currentCamera.moveBackward = true; break;
-                case 68: /*D*/ currentCamera.moveRight = true; break;
-                case 76: /*L - light switch*/ toggleLight(); break;
-                case 70: /*F - freeze*/ freeze = !freeze; break;
-                case 71: /*G - fog*/ enableFog = !enableFog; break;
-                case 86: /*V - change camera*/ if(currentCamera == fpCamera) currentCamera = freeCamera;
+                case 87: /*W*/
+                    if(!collides(currentCamera.eye)){
+                        currentCamera.moveForward = true;
+                    }
+                    break;
+                case 65: /*A*/
+                    currentCamera.moveLeft = true;
+                    break;
+                case 83: /*S*/
+                    currentCamera.moveBackward = true;
+                    break;
+                case 68: /*D*/
+                    currentCamera.moveRight = true;
+                    break;
+                case 76: /*L - light switch*/
+                    toggleLight();
+                    break;
+                case 70: /*F - freeze*/
+                    freeze = !freeze;
+                    break;
+                case 71: /*G - fog*/
+                    enableFog = !enableFog;
+                    break;
+                case 86: /*V - change camera*/
+                    if(currentCamera == fpCamera) currentCamera = freeCamera;
                     else currentCamera = fpCamera;
-                        break;
+                    break;
             }
 
         };
@@ -676,7 +714,6 @@ function webGLStart(){
 
         document.getElementById('la-r').onkeyup = function(){
             currentLighting.lightAmbient.r = parseFloat(this.value);
-            console.log(currentLighting);
 
         };
         document.getElementById('la-g').onkeyup = function(){
@@ -742,11 +779,6 @@ function webGLStart(){
   *************************** END MAIN *****************************************
  */
 
-
-function hasCollision(){
-    return false;
-}
-
 function cosDegree(degree){
     return Math.cos(glMatrix.toRadian(degree));
 }
@@ -790,6 +822,7 @@ function Camera(cameraSettings){
  * @param dm texture modifier to scale the size of the texture to the depth of the object
  */
 function Box(w,l,d,material,wm,lm,dm){
+    this.positions = [];
     this.width = w;
     this.length = l;
     this.height = d;
@@ -894,7 +927,10 @@ function Box(w,l,d,material,wm,lm,dm){
         dm*d,   lm*l,
         0.0,    lm*l
     ];
-
+    this.bounds = {};
+    this.quadrants = [];
+    this.updateBounds();
+    this.updateQuadrant();
     jj = material.length;
     this.material = [];
     if(material.length == 1)
@@ -908,8 +944,46 @@ function Box(w,l,d,material,wm,lm,dm){
         }
 
     this.initBuffers();
-
 }
+
+Box.prototype.updateQuadrant = function(){
+    for(var i = 0; i < 4; i++){
+        console.log("quadrant "+(i));
+        if(collides({"bounds":this.bounds},{"bounds":QUADRANTS[i]})){
+            console.log("collided with quadrant "+i);
+            this.quadrants.push(i);
+        }
+    }
+};
+
+Box.prototype.updateBounds = function(){
+    var size = this.vertices.length/3;
+    var vertices = this.vertices;
+    var minX,maxX,minY,maxY,minZ,maxZ;
+    for(var i = 0; i < size; i+=3){
+        //x
+        if(minX == undefined || vertices[i] < minX){
+            minX = vertices[i];
+        }
+        if(maxX == undefined || vertices[i] > maxX){
+            maxX = vertices[i];
+        }
+        if(minY == undefined || vertices[i+1] < minY){
+            minY = vertices[i+1];
+        }
+        if(maxY == undefined || vertices[i+1] > maxY){
+            maxY = vertices[i+1];
+        }
+        if(minZ == undefined || vertices[i+2] < minZ){
+            minZ = vertices[i+2];
+        }
+        if(maxZ == undefined || vertices[i+2] > maxZ){
+            maxZ = vertices[i+2];
+        }
+    }
+    this.bounds = new Bounds(minX,maxX,minY,maxY,minZ,maxZ);
+};
+
 Box.prototype.initBuffers = function(){
     var gl = globalGL;
 
