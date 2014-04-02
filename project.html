@@ -49,7 +49,7 @@
                 <label for="projection-near">&nbsp;&nbsp;&nbsp;&nbsp;near </label><span id="projection-near"></span><br/>
                 <label for="projection-far">&nbsp;&nbsp;&nbsp;&nbsp;far </label><span id="projection-far"></span><br/>
             </div>
-            <span id="room-info">haha</span><label for="room-info">&nbsp;room</label><br/>
+            <span id="room-info"></span><br/>
         </div>
         <canvas tabindex="1" id="c">
         </canvas>
@@ -171,16 +171,25 @@
                 if(uEnableFog){
                     float perspective_far = 20000.0;
                     float fogCoord  = (gl_FragCoord.z / gl_FragCoord.w) / perspective_far;
-                    float fogDensity = 50.0;
+                    float fogDensity = 100.0;
                     float fog = fogCoord * fogDensity;
-                    vec4 fogColor = vec4(1,1,1,0);
+                    vec4 fogColor = vec4(0.7,0,0,0);
 
                     texColor = texture2D(uSampler0, vTexCoords);
-                    vec4 almostFinalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                     vec4 almostFinalColor;
+                    if(uEnableAmbient){
+                       almostFinalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                    }else{
+                        almostFinalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),1.0);
+                    }
                     finalColor = mix(fogColor, almostFinalColor, clamp(1.0-fog,0.0,1.0) );
                 }else{
                     texColor = texture2D(uSampler0, vTexCoords);
-                    finalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                    if(uEnableAmbient){
+                        finalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),texColor.a);
+                    }else{
+                        finalColor = vec4( texColor.rgb * ( ambientColor + diffuseColor + specularColor ),1.0);
+                    }
                 }
 
                 gl_FragColor = finalColor;
