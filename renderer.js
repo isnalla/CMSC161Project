@@ -300,6 +300,7 @@ function webGLStart(){
         //lounge facilities
         drawSofa(-13.5,0.5,9.25,90,0);
         drawSofa2(-10.25,0.5,12.5,90,0);
+
         for(i=0;i<2;i++){
             drawTable(-13-(i*2),1.75,12.5+j,90,0);
             if(i==0)
@@ -307,6 +308,18 @@ function webGLStart(){
             drawTable(-13,1.75,12.5-(i*2)+j,90,0);
         }
         drawTable(-15,1.75,10.5+j,90,0);
+
+
+        //another lounge
+        drawSofa(-3.5,0.5,9.25,90,0);
+        drawSofa2(-0.25,0.5,21.5,90,0);
+        {
+            drawTable(-2.5,1.75,12.5-2+j,90,0);
+            drawTable(-4.5,1.75,10.5+j,90,0);
+
+            drawTable(-3,1.75,13+6+j,90,0);
+            drawTable(-3,1.75,13+8+j,90,0);
+        }
 
         drawDesk(50, 50, 60);
     }
