@@ -73,6 +73,7 @@ function webGLStart(){
     var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
 
     var ttop = new Box(1,1,0.05,[Materials.WOOD],1,1,1);			//table
+    var ttop2 = new Box(2,2,0.05,[Materials.WOOD],1,1,1);
     var tlegs = new Box(0.05,0.05,0.75,[Materials.WOOD],1,1,1);
     var srow = new Box(0.5,1.95,0.05,[Materials.WOOD],1,1,1);	//shelf
     var scolumn = new Box(0.5,0.05,2.05,[Materials.WOOD],1,1,1);
@@ -86,6 +87,8 @@ function webGLStart(){
     var smain2 = new Box(0.5,2,0.5,[Materials.SOFA_SEAT2],1,1,1);		//sofa2
     var sback2 = new Box(0.25,2,1,[Materials.SOFA_SEAT2],1,1,1);
     var sarm2 = new Box(0.75,0.25,0.75,[Materials.WOOD,Materials.SOFA_SEAT2,Materials.WOOD],1,1,1);
+    var smain3 = new Box(1,0.5,0.5,[Materials.SOFA_SEAT],1,1,1);      //sofa 3
+    var sback3 = new Box(1,0.25,1,[Materials.SOFA_SEAT],1,1,1);
     var dtop = new Box(2,0.05,1,[Materials.WOOD],1,1,1);         //table
     var dbox = new Box(0.75,0.5,1,[Materials.WOOD],1,1,1);         //table
     var dstand = new Box(0.05,0.45,1,[Materials.WOOD],1,1,1);         //table
@@ -123,6 +126,14 @@ function webGLStart(){
         drawObject(tlegs,[x-0.75,y-1,z-0.75],90,0);
     }
 
+    function drawTable2(x,y,z){
+        drawObject(ttop2,[x,y-0.25,z],90,0);
+        drawObject(tlegs,[x+1.75,y-1,z+1.75],90,0);
+        drawObject(tlegs,[x+1.75,y-1,z-1.75],90,0);
+        drawObject(tlegs,[x-1.75,y-1,z+1.75],90,0);
+        drawObject(tlegs,[x-1.75,y-1,z-1.75],90,0);
+    }
+
     function drawShelf(x,y,z,a,b){
         drawObject(srow,[x,y,z],a,b);
         drawObject(srow,[x,y-1,z],a,b);
@@ -154,6 +165,13 @@ function webGLStart(){
         drawObject(sback2,[x+0.75,y+0.5,z],a,b);
         drawObject(sarm2,[x,y+0.25,z+2.25],a,b);
         drawObject(sarm2,[x,y+0.25,z-2.25],a,b);
+    }
+
+    function drawSofa3(x,y,z,a,b){
+        drawObject(smain3,[x,y,z],a,b);
+        drawObject(sback3,[x,y+0.5,z+0.75],a,b);
+        drawObject(sarm,[x+1.25,y+0.25,z],a,b);
+        drawObject(sarm,[x-1.25,y+0.25,z],a,b);
     }
 
     function drawDesk(x,y,z,a,b,c){
@@ -291,37 +309,19 @@ function webGLStart(){
         for(kkk = 0; kkk<9; kkk++)
             drawObject(emergency_step,[28.6,(-3.5-kkk*0.4)-0.2,-4.65+kkk-0.5],0,0);
         //board room facilities
-        var x = 19.75, i=0, j=1.5;
-        for(i=0;i<4;i++){
-            drawTable(x-(i*2),1.75,-24.75);
-            drawChair(x-(i*2),0.75,-23,90,0);
+        var i=0, j=1.5;
+        for(i=2;i<4;i++){
+            drawTable(18.75-(i*2),1.75,-24.75);
+            drawChair(18.75-(i*2),0.75,-23,90,0);
         }
-        drawShelf(20.25,4,-20,90,0);
+        drawDesk(18.25,1.75,-24.5,0,0);
+        drawChair(18.25,0.75,-23,90,0);
+        drawShelf(20.25,4,-19,90,0);
         //lounge facilities
         drawSofa(-13.5,0.5,9.25,90,0);
         drawSofa2(-10.25,0.5,12.5,90,0);
-
-        for(i=0;i<2;i++){
-            drawTable(-13-(i*2),1.75,12.5+j,90,0);
-            if(i==0)
-                continue;
-            drawTable(-13,1.75,12.5-(i*2)+j,90,0);
-        }
-        drawTable(-15,1.75,10.5+j,90,0);
-
-
-        //another lounge
-        drawSofa(-3.5,0.5,9.25,90,0);
-        drawSofa2(-0.25,0.5,21.5,90,0);
-        {
-            drawTable(-2.5,1.75,12.5-2+j,90,0);
-            drawTable(-4.5,1.75,10.5+j,90,0);
-
-            drawTable(-3,1.75,13+6+j,90,0);
-            drawTable(-3,1.75,13+8+j,90,0);
-        }
-
-        drawDesk(50, 50, 60);
+        drawTable2(-13.5,1.75,12.5);
+        drawSofa3(-13.5,0.5,16.5,90,0);
     }
 
     /* --- Lighting Settings --- */
@@ -343,6 +343,13 @@ function webGLStart(){
         //eye  position for specular calculation
         var eyepos = currentCamera.eye;
         gl.uniform3f(uEyePosition,eyepos.x,eyepos.y,eyepos.z);
+
+
+        document.getElementById("light-direction").innerHTML = "("+ld.x+","+ld.y+","+ld.z+")";
+        document.getElementById("light-ambient").innerHTML = "("+amb.r+","+amb.g+","+amb.b+")";
+        document.getElementById("light-diffuse").innerHTML = "("+ldf.r+","+ldf.g+","+ldf.b+")";
+        document.getElementById("light-specular").innerHTML = "("+ls.r+","+ls.g+","+ls.b+")";
+
     }
     /* ------------------------- */
 
