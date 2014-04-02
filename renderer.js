@@ -72,14 +72,20 @@ function webGLStart(){
     var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
     var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
 
-    var ttop = new Box(1,1,0.05,[Materials.DARK_YELLOW],1,1,1);
+    var ttop = new Box(1,1,0.05,[Materials.DARK_YELLOW],1,1,1);			//table
     var tlegs = new Box(0.05,0.05,0.75,[Materials.DARK_YELLOW],1,1,1);
-    var srow = new Box(0.5,1.95,0.05,[Materials.DARK_YELLOW],1,1,1);
+    var srow = new Box(0.5,1.95,0.05,[Materials.DARK_YELLOW],1,1,1);	//shelf
     var scolumn = new Box(0.5,0.05,2.05,[Materials.DARK_YELLOW],1,1,1);
-    var cflat = new Box(0.5,0.5,0.05,[Materials.DARK_YELLOW],1,1,1);
+    var cflat = new Box(0.5,0.5,0.05,[Materials.DARK_YELLOW],1,1,1);	//chair
     var ctlegs = new Box(0.05,0.05,0.5,[Materials.DARK_YELLOW],1,1,1);
     var cblegs = new Box(0.05,0.05,0.375,[Materials.DARK_YELLOW],1,1,1);
     var cback = new Box(0.05,0.25,0.4,[Materials.DARK_YELLOW],1,1,1);
+    var smain = new Box(2,0.5,0.5,[Materials.DARK_YELLOW],1,1,1);		//sofa
+    var sback = new Box(2,0.25,1,[Materials.DARK_YELLOW],1,1,1);
+    var sarm = new Box(0.25,0.75,0.75,[Materials.DARK_YELLOW],1,1,1);
+    var smain2 = new Box(0.5,2,0.5,[Materials.DARK_YELLOW],1,1,1);		//sofa2
+    var sback2 = new Box(0.25,2,1,[Materials.DARK_YELLOW],1,1,1);
+    var sarm2 = new Box(0.75,0.25,0.75,[Materials.DARK_YELLOW],1,1,1);
 
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
@@ -133,9 +139,23 @@ function webGLStart(){
         drawObject(cback,[x,y+0.8,z+0.45],a+90,b+90);
     }
 
+    function drawSofa(x,y,z,a,b,c){
+        drawObject(smain,[x,y,z],a,b);
+        drawObject(sback,[x,y+0.5,z-0.75],a,b);
+        drawObject(sarm,[x+2.25,y+0.25,z],a,b);
+        drawObject(sarm,[x-2.25,y+0.25,z],a,b);
+    }
+
+    function drawSofa2(x,y,z,a,b,c){
+        drawObject(smain2,[x,y,z],a,b);
+        drawObject(sback2,[x+0.75,y+0.5,z],a,b);
+        drawObject(sarm2,[x,y+0.25,z+2.25],a,b);
+        drawObject(sarm2,[x,y+0.25,z-2.25],a,b);
+    }
+
+
     function drawScene(){
         //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
-
         //floors
         drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
         drawObject(_vcorridor,[1,-0.005,-6],90,0);
@@ -259,12 +279,22 @@ function webGLStart(){
         for(kkk = 0; kkk<9; kkk++)
             drawObject(emergency_step,[28.6,(-3.5-kkk*0.4)-0.2,-4.65+kkk-0.5],0,0);
         //board room facilities
-        var x = 19.75, i=0;
+        var x = 19.75, i=0, j=1.5;
         for(i=0;i<4;i++){
             drawTable(x-(i*2),1.75,-24.75);
             drawChair(x-(i*2),0.75,-23,90,0);
         }
         drawShelf(20.25,4,-20,90,0);
+        //lounge facilities
+        drawSofa(-13.5,0.5,9.25,90,0);
+        drawSofa2(-10.25,0.5,12.5,90,0);
+        for(i=0;i<2;i++){
+            drawTable(-13-(i*2),1.75,12.5+j,90,0);
+            if(i==0)
+                continue;
+            drawTable(-13,1.75,12.5-(i*2)+j,90,0);
+        }
+        drawTable(-15,1.75,10.5+j,90,0);
     }
 
     /* --- Lighting Settings --- */
@@ -457,7 +487,7 @@ function webGLStart(){
         enableAmbient = true;
         enableDiffuse = true;
         enableSpecular = true;
-        enableFog = false;
+        enableFog = true;
 
         mouse = {
             x: 0,
@@ -684,6 +714,12 @@ function webGLStart(){
         canvas.onmouseenter = function(event){
             mouse.x = event.clientX;
             mouse.y = event.clientY;
+        };
+
+        canvas.onmousewheel = function(event){
+            if(event.wheelDelta < 0)
+                currentCamera.near -= 1;
+            else currentCamera.near += 1;
         };
 
 
