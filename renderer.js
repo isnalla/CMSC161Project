@@ -72,23 +72,23 @@ function webGLStart(){
     var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
     var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
 
-    var ttop = new Box(1,1,0.05,[Materials.DARK_YELLOW],1,1,1);			//table
-    var tlegs = new Box(0.05,0.05,0.75,[Materials.DARK_YELLOW],1,1,1);
-    var srow = new Box(0.5,1.95,0.05,[Materials.DARK_YELLOW],1,1,1);	//shelf
-    var scolumn = new Box(0.5,0.05,2.05,[Materials.DARK_YELLOW],1,1,1);
-    var cflat = new Box(0.5,0.5,0.05,[Materials.DARK_YELLOW],1,1,1);	//chair
-    var ctlegs = new Box(0.05,0.05,0.5,[Materials.DARK_YELLOW],1,1,1);
-    var cblegs = new Box(0.05,0.05,0.375,[Materials.DARK_YELLOW],1,1,1);
-    var cback = new Box(0.05,0.25,0.4,[Materials.DARK_YELLOW],1,1,1);
+    var ttop = new Box(1,1,0.05,[Materials.WOOD],1,1,1);			//table
+    var tlegs = new Box(0.05,0.05,0.75,[Materials.WOOD],1,1,1);
+    var srow = new Box(0.5,1.95,0.05,[Materials.WOOD],1,1,1);	//shelf
+    var scolumn = new Box(0.5,0.05,2.05,[Materials.WOOD],1,1,1);
+    var cflat = new Box(0.5,0.5,0.05,[Materials.WOOD],1,1,1);	//chair
+    var ctlegs = new Box(0.05,0.05,0.5,[Materials.WOOD],1,1,1);
+    var cblegs = new Box(0.05,0.05,0.375,[Materials.WOOD],1,1,1);
+    var cback = new Box(0.05,0.25,0.4,[Materials.WOOD],1,1,1);
     var smain = new Box(2,0.5,0.5,[Materials.SOFA_SEAT],1,1,1);		//sofa
     var sback = new Box(2,0.25,1,[Materials.SOFA_SEAT],1,1,1);
     var sarm = new Box(0.25,0.75,0.75,[Materials.SOFA_SEAT],1,1,1);
     var smain2 = new Box(0.5,2,0.5,[Materials.SOFA_SEAT2],1,1,1);		//sofa2
     var sback2 = new Box(0.25,2,1,[Materials.SOFA_SEAT2],1,1,1);
     var sarm2 = new Box(0.75,0.25,0.75,[Materials.SOFA_SEAT2],1,1,1);
-    var dtop = new Box(2,0.05,1,[Materials.DARK_YELLOW],1,1,1);         //table
-    var dbox = new Box(0.75,0.5,1,[Materials.DARK_YELLOW],1,1,1);         //table
-    var dstand = new Box(0.05,0.45,1,[Materials.DARK_YELLOW],1,1,1);         //table
+    var dtop = new Box(2,0.05,1,[Materials.WOOD],1,1,1);         //table
+    var dbox = new Box(0.75,0.5,1,[Materials.WOOD],1,1,1);         //table
+    var dstand = new Box(0.05,0.45,1,[Materials.WOOD],1,1,1);         //table
 
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
@@ -709,6 +709,14 @@ function webGLStart(){
             gl.uniform1f(uShininess,1.0);
         };
 
+        Materials.WOOD = function (){  //taken from slidess
+            gl.uniform1i(uSampler0,11);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.7, 0.5, 0.15);
+            gl.uniform3f(uMaterialSpecular,0.9, 0.85, 0.70); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
         IMAGE_SOURCES_ARRAY = [
             {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
             {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
@@ -720,7 +728,8 @@ function webGLStart(){
             {name:'black_white',src:'textures/marble-black-white.png'},
             {name:'dark_yellow',src:'textures/dark-yellow.png'},
             {name:'sofa-seat',src:'textures/sofa-seat.png'},
-            {name:'sofa-seat2',src:'textures/sofa-seat2.png'}
+            {name:'sofa-seat2',src:'textures/sofa-seat2.png'},
+            {name:'wood',src:'textures/wood.png'}
 
         ];
 
