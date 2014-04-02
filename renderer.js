@@ -82,10 +82,10 @@ function webGLStart(){
     var cback = new Box(0.05,0.25,0.4,[Materials.WOOD],1,1,1);
     var smain = new Box(2,0.5,0.5,[Materials.SOFA_SEAT],1,1,1);		//sofa
     var sback = new Box(2,0.25,1,[Materials.SOFA_SEAT],1,1,1);
-    var sarm = new Box(0.25,0.75,0.75,[Materials.SOFA_SEAT],1,1,1);
+    var sarm = new Box(0.25,0.75,0.75,[Materials.WOOD,Materials.WOOD,Materials.SOFA_SEAT],1,1,1);
     var smain2 = new Box(0.5,2,0.5,[Materials.SOFA_SEAT2],1,1,1);		//sofa2
     var sback2 = new Box(0.25,2,1,[Materials.SOFA_SEAT2],1,1,1);
-    var sarm2 = new Box(0.75,0.25,0.75,[Materials.SOFA_SEAT2],1,1,1);
+    var sarm2 = new Box(0.75,0.25,0.75,[Materials.WOOD,Materials.SOFA_SEAT2,Materials.WOOD],1,1,1);
     var dtop = new Box(2,0.05,1,[Materials.WOOD],1,1,1);         //table
     var dbox = new Box(0.75,0.5,1,[Materials.WOOD],1,1,1);         //table
     var dstand = new Box(0.05,0.45,1,[Materials.WOOD],1,1,1);         //table
