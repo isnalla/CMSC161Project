@@ -41,15 +41,15 @@ function webGLStart(){
     //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
     //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-    var lwallBox = new Box(30.75,2.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var swallBox = new Box(28,2.0,0.25,[Materials.SILVER_MARBLE],1,1,1);
-    var _vcorridor = new Box(20,2.02,0.001,[Materials.SILVER_MARBLE],1,1,1);
-    var _hcorridor = new Box(2.625,30.5,0.001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x10floor = new Box(2,10,0.001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x12floor = new Box(2,12.375,0.001,[Materials.SILVER_MARBLE],1,1,1);
-    var _2x30floor = new Box(1.875,30.5,0.001,[Materials.SILVER_MARBLE],1,1,1);
+    var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
+    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
+    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
+    var swallBox = new Box(28,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
+    var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x12floor = new Box(2,12.375,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x30floor = new Box(1.875,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
     var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
     var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
     var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
@@ -717,6 +717,14 @@ function webGLStart(){
             gl.uniform1f(uShininess,1.0);
         };
 
+        Materials.TILE_BLUE = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 12);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.38);
+            gl.uniform3f(uMaterialSpecular,0.8, 0.85, 0.89); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
         IMAGE_SOURCES_ARRAY = [
             {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
             {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
@@ -729,7 +737,8 @@ function webGLStart(){
             {name:'dark_yellow',src:'textures/dark-yellow.png'},
             {name:'sofa-seat',src:'textures/sofa-seat.png'},
             {name:'sofa-seat2',src:'textures/sofa-seat2.png'},
-            {name:'wood',src:'textures/wood.png'}
+            {name:'wood',src:'textures/wood.png'},
+            {name:'tile-blue',src:'textures/tile-blue.png'}
 
         ];
 
