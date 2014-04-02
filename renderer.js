@@ -34,10 +34,9 @@ function webGLStart(){
     var imagesArray;            //array containing image elements
     var freeCamera,fpCamera,currentCamera,currentLighting,defaultLighting,mouse;
     var freeze;
+    var allanX = 0, naziX = 0, kimX = 0;
+    var personDirection = -0.1;
     var toggleWall = 0;
-
-    var _walls = [];
-
     initializeWebGLVariables(); //initialize variables declared above
 
     //Box(w,l,d,[material],wm,lm,dm)  material = material properties and texture
@@ -45,38 +44,36 @@ function webGLStart(){
     //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
     //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-        var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-        var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-        var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-        var swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-    
-        var _1mBox = new Box(0.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _2mBox = new Box(1.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _3mBox = new Box(2.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _4m2Box = new Box(4.25,2.0,0.25,[Materials.VINYL],1,1,1);
+    var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x12floor = new Box(2,12.375,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _2x30floor = new Box(1.875,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
+    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
+    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
+    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
+    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
+    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
+    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
 
-        var _4mBox = new Box(3.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _5mBox = new Box(4.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _6mBox = new Box(6.25,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _8mBox = new Box(8.25,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _9mBox = new Box(9.25,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _10mBox = new Box(10.0,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _13mBox = new Box(12.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
-        var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _1mBox = new Box(0.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _2mBox = new Box(1.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _3mBox = new Box(2.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _4m2Box = new Box(4.25,2.0,0.25,[Materials.VINYL],1,1,1);
 
-        var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
-        var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
-        var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
-        var _2x12floor = new Box(2,12.375,0.001,[Materials.TILE_BLUE],1,1,1);
-        var _2x30floor = new Box(1.875,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
-        var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
-        var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
-        var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
-        var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
-        var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
-        var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
-
+    var _4mBox = new Box(3.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _5mBox = new Box(4.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _6mBox = new Box(6.25,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _8mBox = new Box(8.25,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _9mBox = new Box(9.25,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _10mBox = new Box(10.0,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _13mBox = new Box(12.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
+    var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
 
     var ttop = new Box(1,1,0.05,[Materials.WOOD],1,1,1);			//table
     var ttop2 = new Box(2,2,0.05,[Materials.WOOD],1,1,1);
@@ -99,11 +96,19 @@ function webGLStart(){
     var dbox = new Box(0.75,0.5,1,[Materials.WOOD],1,1,1);         //table
     var dstand = new Box(0.05,0.45,1,[Materials.WOOD],1,1,1);         //table
 
+    var headallan = new Box(0.25,0.25,0.25,[Materials.ALLAN,Materials.WOOD, Materials.WOOD],4,4,4);
+    var headkim = new Box(0.25,0.25,0.25,[Materials.KIM,Materials.WOOD, Materials.WOOD],4,4,4);
+    var headnazi = new Box(0.25,0.25,0.25,[Materials.NAZI,Materials.WOOD, Materials.WOOD],4,4,4);
+    var body = new Box(0.2,0.35,0.5,[Materials.SOFA_SEAT],1,1,1);
+    var arms = new Box(0.125,0.125,0.5,[Materials.WOOD],1,1,1);
+    var legs = new Box(0.125,0.125,0.5,[Materials.WOOD],1,1,1);
+    var ref = new Box(1,2,0.5,[Materials.TILE_BLUE,Materials.WOOD,Materials.WOOD],1,1,1);
+    var oven = new Box(0.5,0.25,0.5,[Materials.TILE_WHITE],1,1,1);
+    var computer = new Box(0.5,0.5,0.5,[Materials.ALLAN,Materials.WOOD,Materials.WOOD],2,2,2);
+
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.WOOD, Materials.WOOD],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1.5,[Materials.BLACK_WHITE],1,1,1);
-
-
 
     animate();
 
@@ -160,6 +165,17 @@ function webGLStart(){
         drawObject(cback,[x,y+0.8,z+0.45],a+90,b+90);
     }
 
+    function drawChair2(x,y,z,a,b){
+        drawObject(cflat,[x,y,z],a,b);
+        drawObject(cblegs,[x+0.45,y-0.425,z+0.45],a,b);
+        drawObject(cblegs,[x-0.45,y-0.425,z+0.45],a,b);
+        drawObject(cblegs,[x+0.45,y-0.425,z-0.45],a,b);
+        drawObject(cblegs,[x-0.45,y-0.425,z-0.45],a,b);
+        drawObject(ctlegs,[x-0.45,y+0.55,z-0.45],a,b);
+        drawObject(ctlegs,[x+0.45,y+0.55,z-0.45],a,b);
+        drawObject(cback,[x,y+0.8,z-0.45],a+90,b+90);
+    }
+
     function drawSofa(x,y,z,a,b,c){
         drawObject(smain,[x,y,z],a,b);
         drawObject(sback,[x,y+0.5,z-0.75],a,b);
@@ -191,10 +207,56 @@ function webGLStart(){
 
     }
 
+    function drawAllan(x,y,z,a,b){
+        drawObject(headallan,[x,y+0.375,z],0,90);
+        drawObject(body,[x,y-0.375,z],a,b);
+        drawObject  (arms,[x,y-0.425,z+0.475],a,b);
+        drawObject(arms,[x,y-0.425,z-0.475],a,b);
+        drawObject(legs,[x,y-1.375,z+0.15],a,b);
+        drawObject(legs,[x,y-1.375,z-0.15],a,b);
+    }
+
+    function drawKim(x,y,z,a,b){
+        drawObject(headkim,[x,y+0.375,z],0,90);
+        drawObject(body,[x,y-0.375,z],a,b);
+        drawObject(arms,[x,y-0.425,z+0.475],a,b);
+        drawObject(arms,[x,y-0.425,z-0.475],a,b);
+        drawObject(legs,[x,y-1.375,z+0.15],a,b);
+        drawObject(legs,[x,y-1.375,z-0.15],a,b);
+    }
+
+    function drawNazi(x,y,z,a,b){
+        drawObject(headnazi,[x,y+0.375,z],0,90);
+        drawObject(body,[x,y-0.375,z],a,b);
+        drawObject(arms,[x,y-0.425,z+0.475],a,b);
+        drawObject(arms,[x,y-0.425,z-0.475],a,b);
+        drawObject(legs,[x,y-1.375,z+0.15],a,b);
+        drawObject(legs,[x,y-1.375,z-0.15],a,b);
+    }
+
+    function drawRef(x,y,z,a,b){
+        drawObject(ref,[x,y,z],0,90);
+    }
+
+    function drawOven(x,y,z,a,b){
+        drawObject(oven,[x,y,z],0,90);
+    }
+
     function drawScene(){
         //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
-        //floors
+        //person
+        allanX  += personDirection;
+        kimX += personDirection*2;
+        naziX += personDirection*3;
 
+        if(allanX < -4 || allanX > 0){
+            personDirection = -personDirection;
+        }
+
+        drawAllan(0.5+allanX,1.9,19,90+allanX,0,0+allanX);
+        drawKim(0.5+kimX,1.9,21,90+kimX,0,0+kimX);
+        drawNazi(0.5+naziX,1.9,17,90+naziX,0,0+naziX);
+        //floors
         drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
         drawObject(_vcorridor,[1,-0.005,-6],90,0);
         drawObject(_vcorridor,[1,0,-28.25],90,0);
@@ -330,6 +392,36 @@ function webGLStart(){
         drawSofa2(-10.25,0.5,12.5,90,0);
         drawTable2(-13.5,1.75,12.5);
         drawSofa3(-13.5,0.5,16.5,90,0);
+        //labs (left)
+        var x=9;
+        do{
+            for(i=0;i<4;i++){
+                drawTable(x-(i*2),1.75,-24.75);
+                drawChair(x-(i*2),0.75,-23,90,0);
+                drawObject(computer,[x-(i*2),2.0625,-24.75],0,0);
+            }
+            x=x-10;
+        }while(x!=-21);
+        //labs (right)
+        x=19;
+        do{
+            for(i=0;i<4;i++){
+                drawTable(x-(i*2),1.75,24.75);
+                drawChair2(x-(i*2),0.75,23,90,0);
+                drawObject(computer,[x-(i*2),2.0625,24.75],0,0);
+            }
+            x=x-10;
+        }while(x!=-11);
+        //kitchen
+        drawTable(-10.25,1.75,23.75);
+        drawRef(-10.25,1.75,21.5);
+        drawOven(-10.25,1.8,23.5);
+        //patio
+        drawTable2(16,1.75,-9);
+        drawSofa2(20.25,0.5,-9,90,0);
+        drawSofa3(16,0.5,-5.25,90,0);
+
+
     }
 
     /* --- Lighting Settings --- */
@@ -438,7 +530,7 @@ function webGLStart(){
      *
      */
 
-    function drawObject(model,position,rotationX,rotationY){
+    function drawObject(model,position,rotationX,rotationY,rotationZ){
         if(imagesArray['seamless-marble-tile'].ready ){
 
             var modelMatrix = mat4.create();//reset model matrix
@@ -448,6 +540,9 @@ function webGLStart(){
             }
             if(rotationY != null){
                 mat4.rotateY(modelMatrix,modelMatrix, glMatrix.toRadian(rotationY));
+            }
+            if(rotationZ != undefined && rotationZ != null){
+                mat4.rotateZ(modelMatrix,modelMatrix, glMatrix.toRadian(rotationZ));
             }
             gl.uniformMatrix4fv(uModel,false,modelMatrix);
             var normalMatrix = mat4.create();
@@ -665,8 +760,8 @@ function webGLStart(){
 
         Materials.VINYL = function (){
             gl.uniform1i(uSampler0, 3);
-            gl.uniform3f(uMaterialDiffuse,0.0,0.0,0.0);
-            gl.uniform3f(uMaterialSpecular,0.3,0.3,0.3); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialDiffuse,0.7,0.7,0.7);
+            gl.uniform3f(uMaterialSpecular,0.2,0.2,0.2); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
             gl.uniform3f(uMaterialAmbient,0.2,0.2,0.2); //COLOR REFLECTED FROM AMBIENT LIGHT
             gl.uniform1f(uShininess,1.0);
         };
@@ -747,9 +842,9 @@ function webGLStart(){
 
         Materials.TILE_BLUE = function (){  //taken from slidess
             gl.uniform1i(uSampler0, 12);  //change this
-            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.38);
-            gl.uniform3f(uMaterialSpecular,0.8, 0.85, 0.89); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
-            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform3f(uMaterialDiffuse,0.6, 0.6, 0.6);
+            gl.uniform3f(uMaterialSpecular,0.7, 0.7, 0.7); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.5,0.5,0.5); //COLOR REFLECTED FROM AMBIENT LIGHT
             gl.uniform1f(uShininess,1.0);
         };
 
@@ -758,6 +853,30 @@ function webGLStart(){
             gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.23);
             gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
             gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
+        Materials.ALLAN = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 14);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.23);
+            gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,1,1,1); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
+        Materials.KIM = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 15);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.23);
+            gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,1,1,1); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
+        Materials.NAZI = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 16);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.23);
+            gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,1,1,1); //COLOR REFLECTED FROM AMBIENT LIGHT
             gl.uniform1f(uShininess,1.0);
         };
 
@@ -775,7 +894,10 @@ function webGLStart(){
             {name:'sofa-seat2',src:'textures/sofa-seat2.png'},
             {name:'wood',src:'textures/wood.png'},
             {name:'tile-blue',src:'textures/tile-blue.png'},
-            {name:'tile-white',src:'textures/tile-white.png'}
+            {name:'tile-white',src:'textures/tile-white.png'},
+            {name:'allan',src:'textures/allan.png'},
+            {name:'kim',src:'textures/kim.png'},
+            {name:'nazi',src:'textures/nazi.png'}
 
         ];
 
@@ -886,6 +1008,8 @@ function webGLStart(){
                     break;
             }
 
+            updateCurrentRoom();
+
         };
 
         canvas.onclick = function(event){
@@ -975,6 +1099,60 @@ function webGLStart(){
 
     }
 
+    function updateCurrentRoom(){
+        //left lab rooms
+        var roomName = "";
+        if(currentCamera.isAbove(_5x9floor,[-4.25,0,17])){
+            roomName = "Laboratory Room 3";
+        }
+        else if(currentCamera.isAbove(_5x9floor,[5.75,0,17])){
+            roomName = "Laboratory Room 2";
+        }
+        else if(currentCamera.isAbove(_5x9floor,[15.75,0,17])){
+            roomName = "Laboratory Room 1";
+        }
+
+        //right lab rooms
+        else if(currentCamera.isAbove(_5x9floor,[5.75,0,-17])){
+            roomName = "Laboratory Room 6";
+        }
+        else if(currentCamera.isAbove(_5x9floor,[-4.25,0,-17])){
+            roomName = "Laboratory Room 5";
+        }
+        else if(currentCamera.isAbove(_5x9floor,[-14.25,0,-17])){
+            roomName = "Laboratory Room 4";
+        }
+        else if(currentCamera.isAbove(_5x6floor,[15.75,0,-20])){
+            roomName = "Board Room";
+        }
+
+
+
+        //patio
+        else if(currentCamera.isAbove(_5x5floor,[16,0,-9])){
+            roomName = "Patio";
+        }
+
+        //women's cr
+        else if(currentCamera.isAbove(_wcrfloor,[-22,0.005,22])){
+            roomName = "Women's Comfort Room";
+        }
+        //men's cr
+        else if(currentCamera.isAbove(_mcrfloor,[-22,0.005,-22])){
+            roomName = "Men's Comfort Room";
+        }
+
+        else{
+            roomName = "";
+        }
+
+        document.getElementById('room-info').innerHTML = roomName;
+
+
+
+
+    }
+
     canvas.focus();
 }
 /**
@@ -1016,6 +1194,23 @@ function Camera(cameraSettings){
     this.moveRight = false;
     this.moveSpeed = cameraSettings.moveSpeed;
     this.upMovable = cameraSettings.upMovable;
+}
+
+Camera.prototype.isAbove = function(object,position){
+    var x = this.eye.x;
+//    var y = this.eye.y;
+    var z = this.eye.z;
+    var minX = position[0] - object.width;
+    var maxX = position[0] + object.width;
+//    var minY = position[1] - object.height;
+//    var maxY = position[1] + object.height;
+    var minZ = position[2] - object.length;
+    var maxZ = position[2] + object.length;
+
+        return (x > minX && x < maxX
+//        && y > minY && y < maxY
+        && z > minZ && z < maxZ);
+
 }
 
 /* Box Class */
@@ -1071,7 +1266,6 @@ function Box(w,l,d,material,wm,lm,dm){
         -w,  l,  d,
         -w,  l, -d
     ];
-
     this.normals = [   // Coorlinates
         -1,-1,1,//front
         1,-1,1,
@@ -1152,7 +1346,6 @@ function Box(w,l,d,material,wm,lm,dm){
     this.initBuffers();
 
 }
-
 Box.prototype.initBuffers = function(){
     var gl = globalGL;
 
