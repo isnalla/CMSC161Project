@@ -86,6 +86,9 @@ function webGLStart(){
     var smain2 = new Box(0.5,2,0.5,[Materials.DARK_YELLOW],1,1,1);		//sofa2
     var sback2 = new Box(0.25,2,1,[Materials.DARK_YELLOW],1,1,1);
     var sarm2 = new Box(0.75,0.25,0.75,[Materials.DARK_YELLOW],1,1,1);
+    var dtop = new Box(2,0.05,1,[Materials.DARK_YELLOW],1,1,1);         //table
+    var dbox = new Box(0.75,0.5,1,[Materials.DARK_YELLOW],1,1,1);         //table
+    var dstand = new Box(0.05,0.45,1,[Materials.DARK_YELLOW],1,1,1);         //table
 
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
@@ -153,6 +156,15 @@ function webGLStart(){
         drawObject(sarm2,[x,y+0.25,z-2.25],a,b);
     }
 
+    function drawDesk(x,y,z,a,b,c){
+        drawObject(dtop,[x,y,z],a,b);
+        drawObject(dbox,[x-1.25,y-0.6,z],a,b);
+        drawObject(dbox,[x+1.25,y-0.6,z],a,b);
+        drawObject(dtop,[x,y-1,z-1],90,b);
+        drawObject(dstand,[x-1.95,y-1.55,z],a,b);
+        drawObject(dstand,[x+1.95,y-1.55,z],a,b);
+
+    }
 
     function drawScene(){
         //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
@@ -295,6 +307,8 @@ function webGLStart(){
             drawTable(-13,1.75,12.5-(i*2)+j,90,0);
         }
         drawTable(-15,1.75,10.5+j,90,0);
+
+        drawDesk(50, 50, 60);
     }
 
     /* --- Lighting Settings --- */
