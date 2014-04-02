@@ -1,6 +1,10 @@
 2/4/2014
     - changed parameters of drawObject(model,position,rotationX,rotationY) -> drawObject(model)
     - added Box.prototype.addOrientation(position,rotationX,rotationY)
+    - drawTables, drawShelves, drawChairs, setTable,setShelf,setChair
+    - merged with natsi
+    - failed attempt on collision
+
 
 1/4/2014
     - merged with natsi
