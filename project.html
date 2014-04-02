@@ -18,17 +18,42 @@
             }
             div#hud{
                 position: absolute;
+                left: 0;
                 color: white;
-
+                z-index: 2;
+            }
+            .params{
+                font-size: 12px;
             }
         </style>
     </head>
     <body>
         <div id="hud">
-            hehehe
+            <span>Light</span><br/>
+            <div class="params">
+                <label for="light-direction">&nbsp;&nbsp;&nbsp;&nbsp;direction </label><span id="light-direction"></span><br/>
+                <label for="light-ambient">&nbsp;&nbsp;&nbsp;&nbsp;ambient </label><span id="light-ambient"></span><br/>
+                <label for="light-diffuse">&nbsp;&nbsp;&nbsp;&nbsp;diffuse </label><span id="light-diffuse"></span><br/>
+                <label for="light-specular">&nbsp;&nbsp;&nbsp;&nbsp;specular </label><span id="light-specular"></span><br/>
+            </div>
+            <span>View</span><br/>
+            <div class="params">
+                <label for="view-eye">&nbsp;&nbsp;&nbsp;&nbsp;eye </label><span id="view-eye"></span><br/>
+                <label for="view-center">&nbsp;&nbsp;&nbsp;&nbsp;center </label><span id="view-center"></span><br/>
+                <label for="view-up">&nbsp;&nbsp;&nbsp;&nbsp;up </label><span id="view-up"></span><br/>
+            </div>
+            <span>Projection (Perspective)</span><br/>
+            <div class="params">
+                <label for="projection-degrees">&nbsp;&nbsp;&nbsp;&nbsp;degrees </label><span id="projection-degrees"></span><br/>
+                <label for="projection-aspect">&nbsp;&nbsp;&nbsp;&nbsp;aspect </label><span id="projection-aspect"></span><br/>
+                <label for="projection-near">&nbsp;&nbsp;&nbsp;&nbsp;near </label><span id="projection-near"></span><br/>
+                <label for="projection-far">&nbsp;&nbsp;&nbsp;&nbsp;far </label><span id="projection-far"></span><br/>
+            </div>
+            <span id="room-info">haha</span><label for="room-info">&nbsp;room</label><br/>
         </div>
         <canvas tabindex="1" id="c">
         </canvas>
+
         <div id="controls">
 
             <fieldset>

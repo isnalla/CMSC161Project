@@ -382,12 +382,23 @@ function webGLStart(){
         );
         gl.uniformMatrix4fv(uView,false,viewMatrix);
 
+        //print hud view matrix
+        document.getElementById("view-eye").innerHTML = "("+eye.x+","+eye.y+","+eye.z+")";
+        document.getElementById("view-center").innerHTML = "("+center.x+","+center.y+","+center.z+")";
+        document.getElementById("view-up").innerHTML = "("+up.x+","+up.y+","+up.z+")";
+
         var perspectiveDegrees = currentCamera.perspectiveDegrees;
         var aspect = canvas.width/canvas.height;
         var near = currentCamera.near;
         var far = currentCamera.far;
         mat4.perspective(projectionMatrix,glMatrix.toRadian(perspectiveDegrees),aspect,near,far);
         gl.uniformMatrix4fv(uProjection,false,projectionMatrix);
+
+        //print hud projection matrix
+        document.getElementById("projection-degrees").innerHTML = perspectiveDegrees+'&deg;';
+        document.getElementById("projection-aspect").innerHTML = aspect;
+        document.getElementById("projection-near").innerHTML = near;
+        document.getElementById("projection-far").innerHTML = far;
 
 
     }
@@ -402,9 +413,6 @@ function webGLStart(){
     function drawObject(model,position,rotationX,rotationY){
         if(imagesArray['seamless-marble-tile'].ready ){
 
-            //                  mat4.translate(modelMatrix,modelMatrix,[0,0,0]);
-            //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(180+i));
-            //                  mat4.rotateX(modelMatrix,modelMatrix, glMatrix.toRadian(i));
             var modelMatrix = mat4.create();//reset model matrix
             mat4.translate(modelMatrix,modelMatrix,position);
             if(rotationX != null){
@@ -501,7 +509,7 @@ function webGLStart(){
         enableAmbient = true;
         enableDiffuse = true;
         enableSpecular = true;
-        enableFog = true;
+        enableFog = false;
 
         mouse = {
             x: 0,
@@ -539,7 +547,7 @@ function webGLStart(){
             moveSpeed: 3
         };
         freeCamera = new Camera(cameraSettings);
-        cameraSettings.eye = {x:0,y:1,z:0};
+        cameraSettings.eye = {x:0,y:3,z:0};
         cameraSettings.upMovable = false;
         cameraSettings.moveSpeed = 1;
         fpCamera = new Camera(cameraSettings);
@@ -749,13 +757,6 @@ function webGLStart(){
             mouse.x = event.clientX;
             mouse.y = event.clientY;
         };
-
-        canvas.onmousewheel = function(event){
-            if(event.wheelDelta < 0)
-                currentCamera.near -= 1;
-            else currentCamera.near += 1;
-        };
-
 
         canvas.onkeyup = function(event){
             event = event || window.event;
