@@ -41,10 +41,10 @@ function webGLStart(){
     //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
     //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-    var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
-    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
-    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
-    var swallBox = new Box(28,2.0,0.25,[Materials.TILE_BLUE],1,1,1);
+    var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    var swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
     var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
     var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
     var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
@@ -90,7 +90,7 @@ function webGLStart(){
     var dbox = new Box(0.75,0.5,1,[Materials.WOOD],1,1,1);         //table
     var dstand = new Box(0.05,0.45,1,[Materials.WOOD],1,1,1);         //table
 
-    var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.RED_STONE, Materials.VINYL],1,0.5,1);
+    var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.WOOD, Materials.WOOD],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1.5,[Materials.BLACK_WHITE],1,1,1);
 
@@ -725,6 +725,14 @@ function webGLStart(){
             gl.uniform1f(uShininess,1.0);
         };
 
+        Materials.TILE_WHITE = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 13);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.23);
+            gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
         IMAGE_SOURCES_ARRAY = [
             {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
             {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
@@ -738,7 +746,8 @@ function webGLStart(){
             {name:'sofa-seat',src:'textures/sofa-seat.png'},
             {name:'sofa-seat2',src:'textures/sofa-seat2.png'},
             {name:'wood',src:'textures/wood.png'},
-            {name:'tile-blue',src:'textures/tile-blue.png'}
+            {name:'tile-blue',src:'textures/tile-blue.png'},
+            {name:'tile-white',src:'textures/tile-white.png'}
 
         ];
 
