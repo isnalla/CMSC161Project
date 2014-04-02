@@ -34,6 +34,10 @@ function webGLStart(){
     var imagesArray;            //array containing image elements
     var freeCamera,fpCamera,currentCamera,currentLighting,defaultLighting,mouse;
     var freeze;
+    var toggleWall = 0;
+
+    var _walls = [];
+
     initializeWebGLVariables(); //initialize variables declared above
 
     //Box(w,l,d,[material],wm,lm,dm)  material = material properties and texture
@@ -41,36 +45,38 @@ function webGLStart(){
     //Box(w,l,d,[material1, material2, material3, material4, material5, material6],wm,lm,dm)    [] = [front, back, top, bottom, right, left]
     //wm, lm, and dm are texture modifiers to scale the size of the texture to the object
 
-    var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-    var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-    var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-    var swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
-    var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
-    var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
-    var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
-    var _2x12floor = new Box(2,12.375,0.001,[Materials.TILE_BLUE],1,1,1);
-    var _2x30floor = new Box(1.875,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
-    var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
-    var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
-    var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
-    var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
-    var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
-    var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
+        var lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+        var lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+        var lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+        var swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+    
+        var _1mBox = new Box(0.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _2mBox = new Box(1.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _3mBox = new Box(2.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _4m2Box = new Box(4.25,2.0,0.25,[Materials.VINYL],1,1,1);
 
-    var _1mBox = new Box(0.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _2mBox = new Box(1.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _3mBox = new Box(2.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _4m2Box = new Box(4.25,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _4mBox = new Box(3.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _5mBox = new Box(4.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _6mBox = new Box(6.25,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _8mBox = new Box(8.25,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _9mBox = new Box(9.25,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _10mBox = new Box(10.0,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _13mBox = new Box(12.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
 
-    var _4mBox = new Box(3.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _5mBox = new Box(4.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _6mBox = new Box(6.25,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _8mBox = new Box(8.25,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _9mBox = new Box(9.25,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _10mBox = new Box(10.0,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _13mBox = new Box(12.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
-    var _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
+        var _vcorridor = new Box(20,2.02,0.001,[Materials.TILE_BLUE],1,1,1);
+        var _hcorridor = new Box(2.625,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
+        var _2x10floor = new Box(2,10,0.001,[Materials.TILE_BLUE],1,1,1);
+        var _2x12floor = new Box(2,12.375,0.001,[Materials.TILE_BLUE],1,1,1);
+        var _2x30floor = new Box(1.875,30.5,0.001,[Materials.TILE_BLUE],1,1,1);
+        var _5x9floor = new Box(5,9,0.001,[Materials.RED_STONE],1,1,1);
+        var _5x6floor = new Box(5,6,0.001,[Materials.BLACK_WHITE],1,1,1);
+        var _5x5floor = new Box(5.25,5,0.002,[Materials.DARK_YELLOW],1,1,1);
+        var _lkfloor = new Box(5,9,0.001,[Materials.BLACK_WHITE],1,1,1);
+        var _wcrfloor = new Box(3,6,0.002,[Materials.WOMEN],1,1,1);
+        var _mcrfloor = new Box(3,6,0.002,[Materials.MEN],1,1,1);
+
 
     var ttop = new Box(1,1,0.05,[Materials.WOOD],1,1,1);			//table
     var ttop2 = new Box(2,2,0.05,[Materials.WOOD],1,1,1);
@@ -96,6 +102,7 @@ function webGLStart(){
     var woodendoor = new Box(1,2,0.05,[Materials.DOOR, Materials.WOOD, Materials.WOOD],1,0.5,1);
     var step = new Box(1.75,0.25,1,[Materials.RED_STONE],1,1,1);
     var emergency_step = new Box(0.8,0.2,1.5,[Materials.BLACK_WHITE],1,1,1);
+
 
 
     animate();
@@ -187,6 +194,7 @@ function webGLStart(){
     function drawScene(){
         //drawObject(floorBox,[0,-1,0],90,0);         //object, position(x,y,z), rotationX, rotationY
         //floors
+
         drawObject(_vcorridor,[1,0,6],90,0);    //vertical corridors
         drawObject(_vcorridor,[1,-0.005,-6],90,0);
         drawObject(_vcorridor,[1,0,-28.25],90,0);
@@ -208,66 +216,66 @@ function webGLStart(){
         drawObject(_2x30floor,[-21.125,0,0],90,0);
         drawObject(_2x30floor,[-28.875,0,0],90,0);
         //outer walls	
-        drawObject(lwallBox2,[26.0,2,17.25],0,90);
-        drawObject(lwallBox3,[26.0,2,-14.5],0,90);		//top is divided into two for the door
-        drawObject(swallBox,[-2.25,2,30.5],0,0);
-        drawObject(lwallBox,[-30.5,2,0],0,90);
-        drawObject(swallBox,[-2.25,2,-30.5],0,0);
+        drawObject(lwallBox2,[26.0,2+(-2*toggleWall),17.25],0,90);
+        drawObject(lwallBox3,[26.0,2+(-2*toggleWall),-14.5],0,90);		//top is divided into two for the door
+        drawObject(swallBox,[-2.25,2+(-2*toggleWall),30.5],0,0);
+        drawObject(lwallBox,[-30.5,2+(-2*toggleWall),0],0,90);
+        drawObject(swallBox,[-2.25,2+(-2*toggleWall),-30.5],0,0);
         //right rooms border walls
-        drawObject(_1mBox,[20,2,8],0,0);
-        drawObject(_8mBox,[-19,2,22],0,90);
-        drawObject(_9mBox,[21,2,17],0,90);
-        drawObject(_17mBox,[-2,2,8],0,0);
-        drawObject(_20mBox,[1,2,26],0,0);
+        drawObject(_1mBox,[20,2+(-2*toggleWall),8],0,0);
+        drawObject(_8mBox,[-19,2+(-2*toggleWall),22],0,90);
+        drawObject(_9mBox,[21,2+(-2*toggleWall),17],0,90);
+        drawObject(_17mBox,[-2,2+(-2*toggleWall),8],0,0);
+        drawObject(_20mBox,[1,2+(-2*toggleWall),26],0,0);
         //top right 5m x 9m lab lower wall
-        drawObject(_3mBox,[11,2,11],0,90);
-        drawObject(_4mBox,[11,2,22],0,90);
+        drawObject(_3mBox,[11,2+(-2*toggleWall),11],0,90);
+        drawObject(_4mBox,[11,2+(-2*toggleWall),22],0,90);
         //middle right 5m x 9m lab lower wall
-        drawObject(_3mBox,[1,2,11],0,90);
-        drawObject(_4mBox,[1,2,22],0,90);
+        drawObject(_3mBox,[1,2+(-2*toggleWall),11],0,90);
+        drawObject(_4mBox,[1,2+(-2*toggleWall),22],0,90);
         //lower right 5m x 9m lab lower wall
-        drawObject(_3mBox,[-9,2,23],0,90);
-        drawObject(_4mBox,[-9,2,12],0,90);
+        drawObject(_3mBox,[-9,2+(-2*toggleWall),23],0,90);
+        drawObject(_4mBox,[-9,2+(-2*toggleWall),12],0,90);
         //kitchen corner - left wall
-        drawObject(_3mBox,[-11.5,2,20],0,0);
+        drawObject(_3mBox,[-11.5,2+(-2*toggleWall),20],0,0);
         //walls on void
-        drawObject(_4m2Box,[21,2,0],0,90);
-        drawObject(_10mBox,[-19,2,0],0,90);
-        drawObject(_20mBox,[1,2,4],0,0);
-        drawObject(_20mBox,[1,2,-4],0,0);
+        drawObject(_4m2Box,[21,2+(-2*toggleWall),0],0,90);
+        drawObject(_10mBox,[-19,2+(-2*toggleWall),0],0,90);
+        drawObject(_20mBox,[1,2+(-2*toggleWall),4],0,0);
+        drawObject(_20mBox,[1,2+(-2*toggleWall),-4],0,0);
         //left rooms border walls
-        drawObject(_6mBox,[21,2,-20],0,90);
-        drawObject(_8mBox,[-19,2,-22],0,90);
-        drawObject(_13mBox,[-6,2,-8],0,0);
-        drawObject(_20mBox,[1,2,-26],0,0);
+        drawObject(_6mBox,[21,2+(-2*toggleWall),-20],0,90);
+        drawObject(_8mBox,[-19,2+(-2*toggleWall),-22],0,90);
+        drawObject(_13mBox,[-6,2+(-2*toggleWall),-8],0,0);
+        drawObject(_20mBox,[1,2+(-2*toggleWall),-26],0,0);
         //board room right walls
-        drawObject(_1mBox,[20,2,-14],0,0);
-        drawObject(_2mBox,[13,2,-14],0,0);
+        drawObject(_1mBox,[20,2+(-2*toggleWall),-14],0,0);
+        drawObject(_2mBox,[13,2+(-2*toggleWall),-14],0,0);
         //top left 5m x 9m lab upper wall
-        drawObject(_3mBox,[11,2,-23],0,90);
-        drawObject(_4mBox,[11,2,-12],0,90);
+        drawObject(_3mBox,[11,2+(-2*toggleWall),-23],0,90);
+        drawObject(_4mBox,[11,2+(-2*toggleWall),-12],0,90);
         //middle left 5m x 9m lab upper wall
-        drawObject(_3mBox,[1,2,-11],0,90);
-        drawObject(_4mBox,[1,2,-22],0,90);
+        drawObject(_3mBox,[1,2+(-2*toggleWall),-11],0,90);
+        drawObject(_4mBox,[1,2+(-2*toggleWall),-22],0,90);
         //lower left 5m x 9m lab upper wall
-        drawObject(_3mBox,[-9,2,-11],0,90);
-        drawObject(_4mBox,[-9,2,-22],0,90);
+        drawObject(_3mBox,[-9,2+(-2*toggleWall),-11],0,90);
+        drawObject(_4mBox,[-9,2+(-2*toggleWall),-22],0,90);
         //women's comfort room
-        drawObject(_1mBox,[-24,2,16],0,0);
-        drawObject(_3mBox,[-22,2,28],0,0);
-        drawObject(_6mBox,[-25,2,22],0,90);
+        drawObject(_1mBox,[-24,2+(-2*toggleWall),16],0,0);
+        drawObject(_3mBox,[-22,2+(-2*toggleWall),28],0,0);
+        drawObject(_6mBox,[-25,2+(-2*toggleWall),22],0,90);
         //men's comfort room
-        drawObject(_1mBox,[-24,2,-16],0,0);
-        drawObject(_3mBox,[-22,2,-28],0,0);
-        drawObject(_6mBox,[-25,2,-22],0,90);
+        drawObject(_1mBox,[-24,2+(-2*toggleWall),-16],0,0);
+        drawObject(_3mBox,[-22,2+(-2*toggleWall),-28],0,0);
+        drawObject(_6mBox,[-25,2+(-2*toggleWall),-22],0,90);
         //stairs(entrance)
-        drawObject(_2mBox,[-25,2,-10],0,0);
-        drawObject(_8mBox,[-27,2,-2],0,90);
-        drawObject(_8mBox,[-23,2,-2],0,90);
+        drawObject(_2mBox,[-25,2+(-2*toggleWall),-10],0,0);
+        drawObject(_8mBox,[-27,2+(-2*toggleWall),-2],0,90);
+        drawObject(_8mBox,[-23,2+(-2*toggleWall),-2],0,90);
         //stairs(exit)
-        drawObject(_2mBox,[28,2,4],0,0);
-        drawObject(_2mBox,[28,2,-6],0,0);
-        drawObject(_5mBox,[29.5,2,-1],0,90);
+        drawObject(_2mBox,[28,2+(-2*toggleWall),4],0,0);
+        drawObject(_2mBox,[28,2+(-2*toggleWall),-6],0,0);
+        drawObject(_5mBox,[29.5,2+(-2*toggleWall),-1],0,90);
         //doors(right) entrance to emergency
         drawObject(woodendoor,[-18,2,9.4],0,45);
         drawObject(woodendoor,[-18,2,14.5],0,-45);
@@ -813,6 +821,53 @@ function webGLStart(){
                 case 65: /*A*/ currentCamera.moveLeft = false; break;
                 case 83: /*S*/ currentCamera.moveBackward = false; break;
                 case 68: /*D*/ currentCamera.moveRight = false; break;
+                case 69: /*E - wall toggle*/ 
+                    if(toggleWall == 1){
+                        lwallBox = new Box(30.75,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+                        lwallBox2 = new Box(13.5,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+                        lwallBox3 = new Box(16.25,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+                        swallBox = new Box(28,2.0,0.25,[Materials.TILE_WHITE],1,1,1);
+                    
+                        _1mBox = new Box(0.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _2mBox = new Box(1.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _3mBox = new Box(2.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _4m2Box = new Box(4.25,2.0,0.25,[Materials.VINYL],1,1,1);
+
+                        _4mBox = new Box(3.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _5mBox = new Box(4.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _6mBox = new Box(6.25,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _8mBox = new Box(8.25,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _9mBox = new Box(9.25,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _10mBox = new Box(10.0,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _13mBox = new Box(12.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _17mBox = new Box(16.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        _20mBox = new Box(19.75,2.0,0.25,[Materials.VINYL],1,1,1);
+                        toggleWall=0;
+                    }else{
+                        lwallBox = new Box(30.75,0.4,0.25,[Materials.TILE_WHITE],1,1,1);
+                        lwallBox2 = new Box(13.5,0.4,0.25,[Materials.TILE_WHITE],1,1,1);
+                        lwallBox3 = new Box(16.25,0.4,0.25,[Materials.TILE_WHITE],1,1,1);
+                        swallBox = new Box(28,0.4,0.25,[Materials.TILE_WHITE],1,1,1);
+                    
+                        _1mBox = new Box(0.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _2mBox = new Box(1.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _3mBox = new Box(2.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _4m2Box = new Box(4.25,0.4,0.25,[Materials.VINYL],1,1,1);
+
+                        _4mBox = new Box(3.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _5mBox = new Box(4.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _6mBox = new Box(6.25,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _8mBox = new Box(8.25,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _9mBox = new Box(9.25,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _10mBox = new Box(10.0,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _13mBox = new Box(12.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _17mBox = new Box(16.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        _20mBox = new Box(19.75,0.4,0.25,[Materials.VINYL],1,1,1);
+                        toggleWall=1;
+                    }
+
+
+                    break;
             }
         };
         canvas.onkeydown = function(event){
@@ -826,7 +881,7 @@ function webGLStart(){
                 case 76: /*L - light switch*/ toggleLight(); break;
                 case 70: /*F - freeze*/ freeze = !freeze; break;
                 case 71: /*G - fog*/ enableFog = !enableFog; break;
-                case 86: /*V - change camera*/ if(currentCamera == fpCamera) currentCamera = freeCamera;
+                case 86: /*V - change camera*/ if(currentCamera == fpCamera) currentCamera = freeCamera;                
                 else currentCamera = fpCamera;
                     break;
             }
@@ -977,6 +1032,8 @@ function Box(w,l,d,material,wm,lm,dm){
     this.width = w;
     this.length = l;
     this.height = d;
+    this.oldL = 0.2;
+
     this.vertices = [   // Coordinates
         // Front face
         -w, -l,  d,
@@ -1014,6 +1071,7 @@ function Box(w,l,d,material,wm,lm,dm){
         -w,  l,  d,
         -w,  l, -d
     ];
+
     this.normals = [   // Coorlinates
         -1,-1,1,//front
         1,-1,1,
@@ -1094,6 +1152,7 @@ function Box(w,l,d,material,wm,lm,dm){
     this.initBuffers();
 
 }
+
 Box.prototype.initBuffers = function(){
     var gl = globalGL;
 
