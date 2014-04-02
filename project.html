@@ -16,10 +16,17 @@
                 position: fixed;
                 right: 10px;
             }
+            div#hud{
+                position: absolute;
+                color: white;
+
+            }
         </style>
     </head>
     <body>
-
+        <div id="hud">
+            hehehe
+        </div>
         <canvas tabindex="1" id="c">
         </canvas>
         <div id="controls">
@@ -44,7 +51,6 @@
                 <label for="ls-b">b:</label><input type="number" id="ls-b"/><br/>
             </fieldset>
         </div>
-
         <script type="x-shader/x-vertex" id="vshader">
             attribute vec3 aPosition;
             attribute vec2 aTexCoords;
@@ -155,7 +161,6 @@
                 gl_FragColor = finalColor;
             }
         </script>
-        <script src="collisionManager.js"></script>
         <script src="renderer.js">
         </script>
     </body>
