@@ -80,12 +80,12 @@ function webGLStart(){
     var ctlegs = new Box(0.05,0.05,0.5,[Materials.DARK_YELLOW],1,1,1);
     var cblegs = new Box(0.05,0.05,0.375,[Materials.DARK_YELLOW],1,1,1);
     var cback = new Box(0.05,0.25,0.4,[Materials.DARK_YELLOW],1,1,1);
-    var smain = new Box(2,0.5,0.5,[Materials.DARK_YELLOW],1,1,1);		//sofa
-    var sback = new Box(2,0.25,1,[Materials.DARK_YELLOW],1,1,1);
-    var sarm = new Box(0.25,0.75,0.75,[Materials.DARK_YELLOW],1,1,1);
-    var smain2 = new Box(0.5,2,0.5,[Materials.DARK_YELLOW],1,1,1);		//sofa2
-    var sback2 = new Box(0.25,2,1,[Materials.DARK_YELLOW],1,1,1);
-    var sarm2 = new Box(0.75,0.25,0.75,[Materials.DARK_YELLOW],1,1,1);
+    var smain = new Box(2,0.5,0.5,[Materials.SOFA_SEAT],1,1,1);		//sofa
+    var sback = new Box(2,0.25,1,[Materials.SOFA_SEAT],1,1,1);
+    var sarm = new Box(0.25,0.75,0.75,[Materials.SOFA_SEAT],1,1,1);
+    var smain2 = new Box(0.5,2,0.5,[Materials.SOFA_SEAT2],1,1,1);		//sofa2
+    var sback2 = new Box(0.25,2,1,[Materials.SOFA_SEAT2],1,1,1);
+    var sarm2 = new Box(0.75,0.25,0.75,[Materials.SOFA_SEAT2],1,1,1);
     var dtop = new Box(2,0.05,1,[Materials.DARK_YELLOW],1,1,1);         //table
     var dbox = new Box(0.75,0.5,1,[Materials.DARK_YELLOW],1,1,1);         //table
     var dstand = new Box(0.05,0.45,1,[Materials.DARK_YELLOW],1,1,1);         //table
@@ -514,9 +514,9 @@ function webGLStart(){
 
         var cameraSettings = {
             eye : {
-                x:80,
-                y:80,
-                z:80,
+                x:10,
+                y:10,
+                z:10,
                 direction : null
             },
             center : {
@@ -684,6 +684,23 @@ function webGLStart(){
             gl.uniform1f(uShininess,27.8);
         };
 
+        //Brass - texture yet just material properties
+        Materials.SOFA_SEAT = function (){  //taken from slidess
+            gl.uniform1i(uSampler0, 9);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.15, 0.15, 0.58);
+            gl.uniform3f(uMaterialSpecular,0.87, 0.87, 0.9); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
+        Materials.SOFA_SEAT2 = function (){  //taken from slidess
+            gl.uniform1i(uSampler0,10);  //change this
+            gl.uniform3f(uMaterialDiffuse,0.44, 0.15, 0.15);
+            gl.uniform3f(uMaterialSpecular,0.9, 0.87, 0.87); //COLOR MATERIAL REFLECTS (MATERIAL COLOR)
+            gl.uniform3f(uMaterialAmbient,0.11,0.11,0.11); //COLOR REFLECTED FROM AMBIENT LIGHT
+            gl.uniform1f(uShininess,1.0);
+        };
+
         IMAGE_SOURCES_ARRAY = [
             {name:'silver-marble-tile',src:'textures/silver-marble-tile.png'},
             {name:'seamless-marble-tile',src:'textures/seamless-marble-tile.png'},
@@ -693,7 +710,10 @@ function webGLStart(){
             {name:'men',src:'textures/mcr.png'},
             {name:'women',src:'textures/wcr.png'},
             {name:'black_white',src:'textures/marble-black-white.png'},
-            {name:'dark_yellow',src:'textures/dark-yellow.png'}
+            {name:'dark_yellow',src:'textures/dark-yellow.png'},
+            {name:'sofa-seat',src:'textures/sofa-seat.png'},
+            {name:'sofa-seat2',src:'textures/sofa-seat2.png'}
+
         ];
 
         imagesArray = [];
